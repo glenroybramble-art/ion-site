@@ -41,11 +41,8 @@ a{color:inherit;text-decoration:none}
   transform-style:preserve-3d;overflow:hidden}
 .ceiling{transform:translate(-50%,-50%) translateZ(calc(var(--depth)/-2)) translateY(calc(var(--room-h)/-2)) rotateX(-90deg);
   background:
-    radial-gradient(38% 28% at 28% 62%, rgba(86,46,150,.18), transparent 70%),
-    radial-gradient(46% 32% at 72% 34%, rgba(40,64,150,.16), transparent 70%),
-    radial-gradient(130% 60% at 50% 30%, #0a0714, #000 74%)}
-.ceiling .stars{position:absolute;inset:0;width:100%;height:100%}
-.ceiling .galaxy{position:absolute;opacity:.95}
+    linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.06) 32%, rgba(0,0,0,.55)),
+    #000 url("assets/galaxies/ceiling.jpg") center/cover}
 /* floor = where the room's glow now lives */
 .floor{transform:translate(-50%,-50%) translateZ(calc(var(--depth)/-2)) translateY(calc(var(--room-h)/2)) rotateX(90deg);
   background:
@@ -159,14 +156,7 @@ a{color:inherit;text-decoration:none}
     <div class="wall left"  id="wallL"><canvas class="waves" data-len="3800"></canvas></div>
     <div class="wall right" id="wallR"><canvas class="waves" data-len="3800"></canvas></div>
     <div class="floor" id="floor"></div>
-    <div class="ceiling" id="ceiling">
-      <canvas class="stars"></canvas>
-      <img class="galaxy" src="assets/galaxies/g1.jpg" alt="" style="left:13%;top:520px;width:330px">
-      <img class="galaxy" src="assets/galaxies/g4.jpg" alt="" style="left:58%;top:1480px;width:250px">
-      <img class="galaxy" src="assets/galaxies/g3.jpg" alt="" style="left:24%;top:2600px;width:300px">
-      <img class="galaxy" src="assets/galaxies/g5.jpg" alt="" style="left:62%;top:3720px;width:300px">
-      <img class="galaxy" src="assets/galaxies/g2.jpg" alt="" style="left:32%;top:4820px;width:260px">
-    </div>
+    <div class="ceiling" id="ceiling"></div>
     <div class="wall back" id="wallB"><canvas class="waves" data-len="1200"></canvas></div>
     <div class="skysign" id="sign">
       <div class="signpanel">
@@ -406,32 +396,6 @@ a{color:inherit;text-decoration:none}
       ctx.stroke();
     }
   }
-  // ---------- ceiling starfield (static, natural — drawn once) ----------
-  (function(){
-    var cv = document.querySelector(".ceiling .stars");
-    if (!cv) return;
-    var W = 700, H = 1800; cv.width = W; cv.height = H;
-    var c = cv.getContext("2d");
-    for (var i=0;i<1100;i++){
-      var x=Math.random()*W, y=Math.random()*H;
-      var r=Math.pow(Math.random(),2.2)*1.7+0.25;          // mostly tiny, a few larger
-      var tint=Math.random();
-      c.globalAlpha = 0.35 + Math.random()*0.65;
-      c.fillStyle = tint<0.10 ? "#bfd0ff" : (tint<0.20 ? "#ffd9b0" : (tint<0.30 ? "#e9c8ff" : "#ffffff"));
-      c.beginPath(); c.arc(x,y,r,0,6.283); c.fill();
-    }
-    for (var j=0;j<26;j++){                                 // a few brighter stars with soft glow
-      var bx=Math.random()*W, by=Math.random()*H, br=Math.random()*1.3+1.3;
-      var g=c.createRadialGradient(bx,by,0,bx,by,br*6);
-      g.addColorStop(0,"rgba(255,255,255,0.9)");
-      g.addColorStop(0.4,"rgba(200,180,255,0.32)");
-      g.addColorStop(1,"rgba(255,255,255,0)");
-      c.globalAlpha=1; c.fillStyle=g; c.beginPath(); c.arc(bx,by,br*6,0,6.283); c.fill();
-      c.fillStyle="#fff"; c.beginPath(); c.arc(bx,by,br,0,6.283); c.fill();
-    }
-    c.globalAlpha = 1;
-  })();
-
   var wt = 0, last = performance.now();
   (function waveLoop(now){
     var dt = Math.min(0.05, (now - last)/1000); last = now;

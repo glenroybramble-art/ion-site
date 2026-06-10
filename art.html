@@ -13,7 +13,7 @@
   --violet:#c873ff; --violet-2:#f0c0ff; --violet-dim:rgba(200,115,255,.45);
   --txt:#efe6ff;
   /* room geometry (px) */
-  --room-w:1200px; --room-h:700px; --depth:5600px;
+  --room-w:1200px; --room-h:700px; --depth:3800px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:var(--void);color:var(--txt);font-family:'Space Grotesk',sans-serif;overflow-x:hidden}
@@ -22,7 +22,7 @@ img{display:block}
 a{color:inherit;text-decoration:none}
 
 /* ---------- scroll driver ---------- */
-#scroller{position:relative;height:940vh;z-index:1;pointer-events:none}
+#scroller{position:relative;height:640vh;z-index:1;pointer-events:none}
 
 /* ---------- fixed 3D stage ---------- */
 .scene{position:fixed;inset:0;overflow:hidden;background:
@@ -45,7 +45,7 @@ a{color:inherit;text-decoration:none}
     radial-gradient(46% 32% at 72% 34%, rgba(40,64,150,.16), transparent 70%),
     radial-gradient(130% 60% at 50% 30%, #0a0714, #000 74%)}
 .ceiling .stars{position:absolute;inset:0;width:100%;height:100%}
-.ceiling .galaxy{position:absolute;mix-blend-mode:screen;opacity:.95}
+.ceiling .galaxy{position:absolute;opacity:.95}
 /* floor = where the room's glow now lives */
 .floor{transform:translate(-50%,-50%) translateZ(calc(var(--depth)/-2)) translateY(calc(var(--room-h)/2)) rotateX(90deg);
   background:
@@ -74,7 +74,7 @@ a{color:inherit;text-decoration:none}
   transform:translate(-50%,-50%) translateZ(calc(var(--depth)*-1))}
 .wall.back .bk-title{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;
   font-family:'Sora',sans-serif;font-weight:200;letter-spacing:.4em;font-size:34px;color:rgba(240,192,255,.30);text-transform:uppercase;z-index:2}
-.wall canvas.waves{position:absolute;inset:0;width:100%;height:100%;opacity:.55;mix-blend-mode:screen;pointer-events:none}
+.wall canvas.waves{position:absolute;inset:0;width:100%;height:100%;opacity:.5;pointer-events:none}
 
 /* drawings hung on the side walls */
 .art{position:absolute;cursor:pointer;transform:translateZ(12px);
@@ -120,7 +120,7 @@ a{color:inherit;text-decoration:none}
 
 /* ---------- enlarged viewer (lifts off wall) ---------- */
 #backdrop{position:fixed;inset:0;z-index:48;background:radial-gradient(circle at 50% 45%,rgba(20,6,32,.72),rgba(0,0,0,.92));
-  opacity:0;visibility:hidden;transition:opacity .45s ease, visibility .45s;backdrop-filter:blur(2px)}
+  opacity:0;visibility:hidden;transition:opacity .45s ease, visibility .45s}
 #backdrop.on{opacity:1;visibility:visible}
 #viewer{position:fixed;inset:0;z-index:50;pointer-events:none}
 #vfig{position:fixed;left:0;top:0;width:0;height:0;pointer-events:auto;cursor:pointer;
@@ -156,8 +156,8 @@ a{color:inherit;text-decoration:none}
 
 <div class="scene" id="scene">
   <div class="world" id="world">
-    <div class="wall left"  id="wallL"><canvas class="waves" data-len="5600"></canvas></div>
-    <div class="wall right" id="wallR"><canvas class="waves" data-len="5600"></canvas></div>
+    <div class="wall left"  id="wallL"><canvas class="waves" data-len="3800"></canvas></div>
+    <div class="wall right" id="wallR"><canvas class="waves" data-len="3800"></canvas></div>
     <div class="floor" id="floor"></div>
     <div class="ceiling" id="ceiling">
       <canvas class="stars"></canvas>
@@ -240,7 +240,7 @@ a{color:inherit;text-decoration:none}
   // auto-placement along each wall: staggered heights + widths so nothing lines up flat
   var THEIGHTS = [110, 290, 165, 250, 130, 300, 205, 175];
   var WIDTHS   = [300, 250, 275, 215, 295, 235, 260];
-  var START_L = 340, START_R = 520, SPACING = 350;
+  var START_L = 300, START_R = 420, SPACING = 250;
   var iL = 0, iR = 0;
 
   PIECES.forEach(function(p, gi){
@@ -264,7 +264,7 @@ a{color:inherit;text-decoration:none}
   });
 
   // ---------- scroll → camera walk ----------
-  var CAM_MAX = 5000;          // px walked into the room
+  var CAM_MAX = 3300;          // px walked into the room
   var cam = 0, target = 0, raf = null;
   function maxScroll(){ return Math.max(1, document.getElementById("scroller").offsetHeight - window.innerHeight); }
   function onScroll(){
@@ -288,8 +288,8 @@ a{color:inherit;text-decoration:none}
     wallB.style.transform = "translate(-50%,-50%) translateZ(" + (-BACKDIST - cam) + "px)";
     // floor + ceiling stay static (cancel the walk) so only the side walls scroll
     var anti = "translateZ(" + (-cam) + "px) translate(-50%,-50%) ";
-    floorEl.style.transform = anti + "translateZ(-2800px) translateY(350px) rotateX(90deg)";
-    ceilEl.style.transform  = anti + "translateZ(-2800px) translateY(-350px) rotateX(-90deg)";
+    floorEl.style.transform = anti + "translateZ(-1900px) translateY(350px) rotateX(90deg)";
+    ceilEl.style.transform  = anti + "translateZ(-1900px) translateY(-350px) rotateX(-90deg)";
     for (var i=0;i<arts.length;i++){
       var eff = parseFloat(arts[i].dataset.basez) + cam;   // world z relative to camera
       var op;
@@ -396,8 +396,6 @@ a{color:inherit;text-decoration:none}
       ctx.beginPath();
       ctx.lineWidth = L.lw;
       ctx.strokeStyle = L.col;
-      ctx.shadowColor = L.col;
-      ctx.shadowBlur = 10;
       var baseY = H * L.base, amp = H * L.amp;
       for (var x=0; x<=W; x+=6){
         // +t makes crests travel toward x=0 = the front edge (toward the viewer)
@@ -407,7 +405,6 @@ a{color:inherit;text-decoration:none}
       }
       ctx.stroke();
     }
-    ctx.shadowBlur = 0;
   }
   // ---------- ceiling starfield (static, natural — drawn once) ----------
   (function(){

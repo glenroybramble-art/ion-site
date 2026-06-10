@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Artist Name — Newgroove Studio</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Sora:wght@200;400;600;800&display=swap');
+:root{--void:#04040a;--ion:#9fd8e6;--ion-bright:#d6f2fb;--electric:#3aa6ff;--electric-deep:#1f6fd6;--ink:#e8eef5;--muted:#8893a6}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--ink);font-family:'Space Grotesk',sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.cosmos{position:fixed;inset:0;z-index:-2;background:radial-gradient(120% 80% at 50% -10%,#0c1426 0%,#06070f 45%,#020207 100%)}
+.stars{position:fixed;inset:0;z-index:-1;background-image:radial-gradient(1px 1px at 12% 18%,#fff,transparent),radial-gradient(1px 1px at 80% 12%,#cde,transparent),radial-gradient(1px 1px at 62% 30%,#fff,transparent),radial-gradient(1px 1px at 30% 58%,#9bd,transparent),radial-gradient(1.5px 1.5px at 88% 48%,#fff,transparent),radial-gradient(1px 1px at 22% 78%,#fff,transparent),radial-gradient(1px 1px at 70% 70%,#fff,transparent);opacity:.5}
+.wrap{max-width:1040px;margin:0 auto;padding:0 26px 100px}
+nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);background:rgba(4,4,10,.6);border-bottom:1px solid rgba(159,216,230,.12)}
+.navin{max-width:1040px;margin:0 auto;padding:14px 26px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:11px;font-family:'Sora';font-weight:800}
+.brand .ring{width:28px;height:28px;border-radius:50%;border:2px solid var(--electric);box-shadow:0 0 14px rgba(58,166,255,.7),inset 0 0 8px rgba(58,166,255,.5);position:relative;flex:none}
+.brand .ring::after{content:"";position:absolute;inset:7px;border-radius:50%;background:var(--electric);box-shadow:0 0 10px var(--electric)}
+.back{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);transition:.2s}
+.back:hover{color:var(--electric)}
+/* hero */
+.ahero{display:grid;grid-template-columns:300px 1fr;gap:36px;align-items:center;padding:56px 0 30px}
+@media(max-width:680px){.ahero{grid-template-columns:1fr;text-align:center}}
+.aphoto{aspect-ratio:1;border-radius:20px;background:radial-gradient(circle at 48% 32%,#1b3a66,#0a1322 72%);display:flex;align-items:center;justify-content:center;color:rgba(214,242,251,.5);font-family:'Sora';font-weight:800;font-size:72px;border:1px solid rgba(58,166,255,.3);box-shadow:0 0 40px rgba(58,166,255,.18)}
+.freqtag{display:inline-block;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--electric);border:1px solid rgba(58,166,255,.4);border-radius:40px;padding:6px 16px;margin-bottom:16px;background:rgba(58,166,255,.08)}
+.ahero h1{font-family:'Sora';font-weight:800;font-size:clamp(34px,6vw,60px);line-height:1;letter-spacing:-.02em}
+.role{color:var(--electric);font-size:15px;letter-spacing:.16em;text-transform:uppercase;margin-top:10px}
+.intro{color:#aeb9c9;margin-top:16px;font-size:16px;max-width:520px}
+.socials{margin-top:20px;display:flex;gap:12px;flex-wrap:wrap}
+@media(max-width:680px){.socials{justify-content:center}}
+.socials a{font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:8px 16px;border-radius:30px;border:1px solid rgba(159,216,230,.3);color:var(--ion-bright);transition:.2s}
+.socials a:hover{border-color:var(--electric);color:var(--electric);background:rgba(58,166,255,.08)}
+section{margin-top:56px}
+.eyebrow{font-family:'Sora';font-weight:600;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--ion);display:flex;align-items:center;gap:12px}
+.eyebrow::before{content:"";width:26px;height:1px;background:var(--electric);box-shadow:0 0 8px var(--electric)}
+.h-sec{font-family:'Sora';font-weight:800;font-size:clamp(24px,4vw,34px);margin:14px 0 16px}
+.bio p{color:#b9c3d2;max-width:760px;margin-bottom:14px}
+/* gigs */
+.gigs{display:grid;gap:12px;margin-top:8px}
+.gig{display:flex;align-items:center;gap:20px;padding:16px 18px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(10,10,22,.45);flex-wrap:wrap}
+.gig .date{font-family:'Sora';font-weight:600;text-align:center;flex:none;min-width:62px}
+.gig .date b{display:block;font-size:24px;color:var(--electric);line-height:1}
+.gig .date span{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.gig .info{flex:1;min-width:160px}
+.gig .info b{font-size:16px;font-family:'Sora';font-weight:600}
+.gig .info span{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+.gig .tix{font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:9px 18px;border-radius:30px;background:linear-gradient(90deg,var(--electric),var(--electric-deep));color:#fff;white-space:nowrap}
+/* studio work */
+.work{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-top:8px}
+.wcard{display:block;padding:18px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(10,10,22,.45);transition:.2s}
+.wcard:hover{border-color:var(--electric);background:rgba(58,166,255,.08);transform:translateY(-3px)}
+.wcard .k{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--electric)}
+.wcard b{display:block;font-family:'Sora';font-weight:600;font-size:16px;margin:6px 0 4px}
+.wcard span{font-size:13px;color:var(--muted)}
+footer{margin-top:80px;padding-top:30px;border-top:1px solid rgba(159,216,230,.14);text-align:center;color:var(--muted);font-size:13px}
+footer a{color:var(--electric)}
+.note{font-size:11px;color:#5d6678;font-style:italic;margin-top:10px}
+</style></head>
+<body>
+<div class="cosmos"></div><div class="stars"></div>
+
+<nav><div class="navin">
+  <a class="brand" href="../index.html"><span class="ring"></span><span>Ion Productions</span></a>
+  <a class="back" href="../music.html">← Back to Newgroove Studio</a>
+</div></nav>
+
+<div class="wrap">
+
+<header class="ahero">
+  <div class="aphoto">A</div>
+  <div>
+    <span class="freqtag">432 Hz · Newgroove Studio Artist</span>
+    <h1>Artist Name</h1>
+    <div class="role">Instrument / Role</div>
+    <p class="intro">A one or two line introduction — who they are and what they bring to the frequency.</p>
+    <div class="socials">
+      <a href="#">Instagram</a>
+      <a href="#">YouTube</a>
+      <a href="#">SoundCloud</a>
+      <a href="#">Website</a>
+    </div>
+  </div>
+</header>
+
+<section class="bio">
+  <div class="eyebrow">Bio</div>
+  <div class="h-sec">The story</div>
+  <p>Full biography goes here. Where they're from, how they got into music, the instruments and styles they play, who they've worked with, and what they're known for around the studio.</p>
+  <p>Add a second paragraph for milestones, influences, or anything that gives the artist their character. This page is a template — copy it for each new artist and swap in the photo, name, and details.</p>
+</section>
+
+<section>
+  <div class="eyebrow">Live</div>
+  <div class="h-sec">Upcoming gigs</div>
+  <div class="gigs">
+    <div class="gig"><div class="date"><b>14</b><span>Jun</span></div><div class="info"><b>Venue Name</b><span>City, State · 8:00 PM</span></div><a class="tix" href="#">Tickets</a></div>
+    <div class="gig"><div class="date"><b>28</b><span>Jun</span></div><div class="info"><b>Festival / Club</b><span>City, State · 9:30 PM</span></div><a class="tix" href="#">Tickets</a></div>
+    <div class="gig"><div class="date"><b>09</b><span>Jul</span></div><div class="info"><b>Another Venue</b><span>City, State · 7:00 PM</span></div><a class="tix" href="#">Tickets</a></div>
+  </div>
+  <p class="note">Swap these in as gigs get booked. Remove the row if there's nothing scheduled.</p>
+</section>
+
+<section>
+  <div class="eyebrow">In the Studio</div>
+  <div class="h-sec">Their work at Newgroove</div>
+  <div class="work">
+    <a class="wcard" href="../music.html#player"><span class="k">Live</span><b>Session Title</b><span>The session they played on — opens in the player.</span></a>
+    <a class="wcard" href="../music.html#player"><span class="k">Recording</span><b>Track Title</b><span>A studio recording they're featured on.</span></a>
+    <a class="wcard" href="../music.html#video"><span class="k">Video</span><b>Performance Clip</b><span>A video from the studio.</span></a>
+  </div>
+</section>
+
+<footer>
+  <p>A Newgroove Studio artist · part of <a href="../index.html">Ion Productions</a>.</p>
+  <p class="note">Template page — duplicate it for each artist (e.g. artists/saxy-ric.html) and link it from the Music page.</p>
+</footer>
+
+</div>
+</body></html>

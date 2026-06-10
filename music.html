@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Newgroove Studio — Music · Ion Productions</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Sora:wght@200;400;600;800&display=swap');
+:root{--void:#04040a;--void2:#0a0a16;--ion:#9fd8e6;--ion-bright:#d6f2fb;--electric:#3aa6ff;--electric-deep:#1f6fd6;--amber:#ff7a2c;--magenta:#c873ff;--nebula:#7be0a6;--ink:#e8eef5;--muted:#8893a6}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--ink);font-family:'Space Grotesk',sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1180px;margin:0 auto;padding:0 26px 100px}
+/* cosmic background */
+.cosmos{position:fixed;inset:0;z-index:-2;background:radial-gradient(120% 80% at 50% -10%,#0c1426 0%,#06070f 45%,#020207 100%)}
+.stars{position:fixed;inset:0;z-index:-1;background-image:radial-gradient(1px 1px at 12% 18%,#fff,transparent),radial-gradient(1px 1px at 80% 12%,#cde,transparent),radial-gradient(1px 1px at 62% 30%,#fff,transparent),radial-gradient(1px 1px at 30% 58%,#9bd,transparent),radial-gradient(1.5px 1.5px at 88% 48%,#fff,transparent),radial-gradient(1px 1px at 22% 78%,#fff,transparent),radial-gradient(1px 1px at 48% 90%,#fff,transparent),radial-gradient(1px 1px at 70% 70%,#fff,transparent),radial-gradient(1.5px 1.5px at 92% 84%,#bdf,transparent);opacity:.55}
+/* nav */
+nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);background:rgba(4,4,10,.6);border-bottom:1px solid rgba(159,216,230,.12)}
+.navin{max-width:1180px;margin:0 auto;padding:14px 26px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:'Sora',sans-serif;font-weight:800;letter-spacing:.02em}
+.brand .ring{width:30px;height:30px;border-radius:50%;border:2px solid var(--electric);box-shadow:0 0 14px rgba(58,166,255,.7),inset 0 0 8px rgba(58,166,255,.5);position:relative;flex:none}
+.brand .ring::after{content:"";position:absolute;inset:7px;border-radius:50%;background:var(--electric);box-shadow:0 0 10px var(--electric)}
+.brand small{display:block;font-family:'Space Grotesk';font-weight:400;font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--muted)}
+.navlinks{display:flex;gap:22px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.navlinks a{transition:color .2s}
+.navlinks a:hover{color:var(--ink)}
+.navlinks a.active{color:var(--electric)}
+@media(max-width:720px){.navlinks{display:none}}
+/* hero */
+.hero{position:relative;text-align:center;padding:84px 0 56px}
+.hero canvas{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:100%;height:340px;z-index:0;opacity:.9;pointer-events:none}
+.hero .inner{position:relative;z-index:2}
+.freqtag{display:inline-block;font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--electric);border:1px solid rgba(58,166,255,.4);border-radius:40px;padding:7px 18px;margin-bottom:22px;background:rgba(58,166,255,.08)}
+.hero h1{font-family:'Sora',sans-serif;font-weight:800;font-size:clamp(40px,8vw,86px);line-height:1;letter-spacing:-.02em;background:linear-gradient(135deg,#e8f8ff,#7dd4ff 45%,#3aa6ff 80%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 22px rgba(58,166,255,.45))}
+.hero p.lead{max-width:580px;margin:20px auto 0;color:#aeb9c9;font-size:17px}
+.hcta{margin-top:30px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-block;padding:13px 26px;border-radius:40px;font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:500;cursor:pointer;transition:transform .15s,box-shadow .3s}
+.btn:hover{transform:translateY(-2px)}
+.btn.solid{background:linear-gradient(90deg,var(--electric),var(--electric-deep));color:#fff;box-shadow:0 0 24px rgba(58,166,255,.5)}
+.btn.ghost{border:1px solid rgba(159,216,230,.4);color:var(--ion-bright);background:rgba(58,166,255,.08)}
+/* section */
+section{margin-top:74px}
+.eyebrow{font-family:'Sora';font-weight:600;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--ion);display:flex;align-items:center;gap:12px}
+.eyebrow::before{content:"";width:26px;height:1px;background:var(--electric);box-shadow:0 0 8px var(--electric)}
+.h-sec{font-family:'Sora';font-weight:800;font-size:clamp(26px,4vw,40px);letter-spacing:-.01em;margin:14px 0 8px}
+.sub{color:var(--muted);max-width:640px;font-size:15.5px}
+/* session cards */
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:30px}
+.scard{position:relative;border-radius:16px;padding:26px 22px;border:1px solid rgba(255,255,255,.09);background:linear-gradient(160deg,rgba(58,166,255,.08),rgba(10,10,22,.4));overflow:hidden;transition:transform .2s,border-color .2s}
+.scard:hover{transform:translateY(-4px);border-color:rgba(58,166,255,.4)}
+.scard .hz{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--electric);opacity:.85}
+.scard h3{font-family:'Sora';font-weight:800;font-size:22px;margin:8px 0 8px}
+.scard p{font-size:14px;color:#b6c0cf}
+.scard .ico{font-size:22px;margin-bottom:6px;filter:drop-shadow(0 0 8px var(--electric))}
+/* ── PLAYER ── */
+.player{margin-top:32px;display:grid;grid-template-columns:300px 1fr;gap:24px;border:1px solid rgba(159,216,230,.16);border-radius:20px;padding:24px;background:linear-gradient(150deg,rgba(12,20,38,.7),rgba(6,7,15,.6));backdrop-filter:blur(6px)}
+@media(max-width:760px){.player{grid-template-columns:1fr}}
+.np-art{aspect-ratio:1;border-radius:16px;background:radial-gradient(circle at 38% 32%,#1b3a66,#0a1322 70%);position:relative;overflow:hidden;border:1px solid rgba(58,166,255,.3);display:flex;align-items:center;justify-content:center}
+.np-art .ringart{width:54%;height:54%;border-radius:50%;border:3px solid var(--electric);box-shadow:0 0 28px rgba(58,166,255,.7),inset 0 0 22px rgba(58,166,255,.4);position:relative;animation:spin 14s linear infinite}
+.np-art .ringart::after{content:"";position:absolute;inset:30%;border-radius:50%;background:var(--electric);box-shadow:0 0 20px var(--electric)}
+.np-art.playing .ringart{animation-duration:5s}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* equalizer */
+.eq{position:absolute;bottom:0;left:0;right:0;height:40%;display:flex;align-items:flex-end;justify-content:center;gap:4px;padding:0 14px 12px}
+.eq span{flex:1;max-width:8px;background:linear-gradient(180deg,var(--electric),rgba(58,166,255,.2));border-radius:3px 3px 0 0;height:18%;opacity:.7}
+.np-art.playing .eq span{animation:bounce .9s ease-in-out infinite}
+.np-art.playing .eq span:nth-child(2){animation-delay:.1s}.np-art.playing .eq span:nth-child(3){animation-delay:.25s}.np-art.playing .eq span:nth-child(4){animation-delay:.4s}.np-art.playing .eq span:nth-child(5){animation-delay:.15s}.np-art.playing .eq span:nth-child(6){animation-delay:.32s}.np-art.playing .eq span:nth-child(7){animation-delay:.05s}
+@keyframes bounce{0%,100%{height:14%}50%{height:85%}}
+.np-meta{margin-top:16px;text-align:center}
+.np-title{font-family:'Sora';font-weight:600;font-size:18px}
+.np-artist{color:var(--muted);font-size:13px;margin-top:2px}
+.controls{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:18px}
+.controls button{background:none;border:none;color:var(--ink);cursor:pointer;font-size:18px;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background .2s,color .2s}
+.controls button:hover{color:var(--electric)}
+.controls .play{background:linear-gradient(90deg,var(--electric),var(--electric-deep));color:#fff;width:54px;height:54px;font-size:20px;box-shadow:0 0 22px rgba(58,166,255,.55)}
+.seek{display:flex;align-items:center;gap:10px;margin-top:16px;font-size:11px;color:var(--muted)}
+.seek input[type=range]{flex:1;-webkit-appearance:none;height:4px;border-radius:3px;background:rgba(159,216,230,.2);cursor:pointer}
+.seek input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--electric);box-shadow:0 0 10px var(--electric)}
+.seek input[type=range]::-moz-range-thumb{width:13px;height:13px;border:none;border-radius:50%;background:var(--electric)}
+/* playlist */
+.pl-head{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:6px 13px;border-radius:30px;border:1px solid rgba(159,216,230,.25);color:var(--muted);cursor:pointer;transition:.2s}
+.chip.active,.chip:hover{color:var(--electric);border-color:var(--electric);background:rgba(58,166,255,.1)}
+.tracklist{max-height:330px;overflow-y:auto;margin-top:4px}
+.track{display:flex;align-items:center;gap:14px;padding:11px 12px;border-radius:10px;cursor:pointer;transition:background .18s}
+.track:hover{background:rgba(58,166,255,.08)}
+.track.active{background:rgba(58,166,255,.14)}
+.track .num{width:22px;text-align:center;color:var(--muted);font-size:13px;flex:none}
+.track.active .num{color:var(--electric)}
+.track .ti{flex:1;min-width:0}
+.track .ti b{font-weight:500;font-size:14.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.track .ti span{font-size:12px;color:var(--muted)}
+.track .cat{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--electric);opacity:.7;flex:none}
+.track .dur{font-size:12px;color:var(--muted);flex:none}
+/* video player */
+.video-wrap{margin-top:30px;display:grid;grid-template-columns:1fr 280px;gap:20px}
+@media(max-width:820px){.video-wrap{grid-template-columns:1fr}}
+.vframe{position:relative;aspect-ratio:16/9;border-radius:16px;overflow:hidden;border:1px solid rgba(58,166,255,.3);background:#06070f}
+.vframe iframe{width:100%;height:100%;border:0;display:block}
+.vplaceholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px;background:radial-gradient(circle at 50% 40%,#13294a,#070b15)}
+.vplaceholder .pbtn{width:66px;height:66px;border-radius:50%;background:linear-gradient(90deg,var(--electric),var(--electric-deep));display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff;box-shadow:0 0 26px rgba(58,166,255,.6)}
+.vplaceholder small{color:var(--muted);font-size:12px;max-width:300px}
+.vlist{display:flex;flex-direction:column;gap:10px;max-height:360px;overflow-y:auto}
+.vitem{display:flex;gap:12px;align-items:center;padding:9px;border-radius:12px;cursor:pointer;border:1px solid rgba(255,255,255,.07);transition:.2s}
+.vitem:hover,.vitem.active{border-color:var(--electric);background:rgba(58,166,255,.08)}
+.vthumb{width:74px;height:46px;border-radius:8px;flex:none;background:radial-gradient(circle at 40% 35%,#1d3c66,#0a1322);display:flex;align-items:center;justify-content:center;color:var(--electric);font-size:15px;border:1px solid rgba(58,166,255,.25)}
+.vitem b{font-weight:500;font-size:13.5px;display:block}
+.vitem span{font-size:11.5px;color:var(--muted)}
+/* artists */
+.artgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px;margin-top:30px}
+.acard{border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.08);background:rgba(10,10,22,.5);transition:transform .2s,border-color .2s;display:block}
+.acard:hover{transform:translateY(-4px);border-color:rgba(58,166,255,.45)}
+.acard .photo{aspect-ratio:1;background:radial-gradient(circle at 50% 30%,#1b3a66,#0a1322);display:flex;align-items:center;justify-content:center;color:rgba(214,242,251,.5);font-size:40px;font-family:'Sora';font-weight:800}
+.acard .abody{padding:15px 16px}
+.acard .abody b{font-family:'Sora';font-weight:600;font-size:17px}
+.acard .abody span{display:block;font-size:12px;color:var(--electric);letter-spacing:.12em;text-transform:uppercase;margin-top:3px}
+.acard .abody p{font-size:12.5px;color:var(--muted);margin-top:8px}
+.addcard{display:flex;align-items:center;justify-content:center;border-style:dashed;color:var(--muted);min-height:120px;font-size:13px}
+/* gallery */
+.tabs{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap}
+.tab{padding:9px 18px;border-radius:30px;border:1px solid rgba(159,216,230,.25);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:.2s}
+.tab.active,.tab:hover{color:var(--electric);border-color:var(--electric);background:rgba(58,166,255,.1)}
+.pane{display:none;margin-top:22px}
+.pane.show{display:block}
+.gphotos{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.gphoto{aspect-ratio:4/3;border-radius:12px;background:radial-gradient(circle at 40% 35%,#16294a,#080c16);display:flex;align-items:center;justify-content:center;color:rgba(214,242,251,.35);font-size:24px;border:1px solid rgba(255,255,255,.06)}
+.projlist{display:grid;gap:14px}
+.proj{display:flex;gap:16px;align-items:flex-start;padding:16px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(10,10,22,.4)}
+.proj .status{font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:5px 11px;border-radius:20px;flex:none;height:fit-content}
+.proj .status.live{color:var(--nebula);border:1px solid rgba(123,224,166,.5);background:rgba(123,224,166,.08)}
+.proj .status.past{color:var(--muted);border:1px solid rgba(136,147,166,.4)}
+.proj h4{font-family:'Sora';font-weight:600;font-size:16px;margin-bottom:3px}
+.proj p{font-size:13px;color:var(--muted)}
+/* footer */
+footer{margin-top:90px;padding-top:34px;border-top:1px solid rgba(159,216,230,.14);text-align:center;color:var(--muted);font-size:13px}
+footer a{color:var(--electric)}
+.note{font-size:11px;color:#5d6678;font-style:italic;margin-top:10px}
+</style></head>
+<body>
+<div class="cosmos"></div><div class="stars"></div>
+
+<nav><div class="navin">
+  <a class="brand" href="index.html"><span class="ring"></span><span>Ion Productions<small>Sound · Design · Art · Images</small></span></a>
+  <div class="navlinks">
+    <a href="music.html" class="active">Music</a>
+    <a href="index.html#frequencies">Design</a>
+    <a href="index.html#frequencies">Art</a>
+    <a href="index.html#frequencies">Images</a>
+    <a href="index.html">Home</a>
+  </div>
+</div></nav>
+
+<div class="wrap">
+
+<!-- HERO -->
+<header class="hero">
+  <canvas id="waveHero"></canvas>
+  <div class="inner">
+    <span class="freqtag">432 Hz · The Music Frequency</span>
+    <h1>Newgroove Studio</h1>
+    <p class="lead">The home of everything I make in sound — live sessions, studio recordings, late-night jams, and music caught out in the wild. Tune in and travel by frequency.</p>
+    <div class="hcta">
+      <a class="btn solid" href="#player">Open the player</a>
+      <a class="btn ghost" href="#artists">Featured artists</a>
+    </div>
+  </div>
+</header>
+
+<!-- SESSIONS -->
+<section id="sessions">
+  <div class="eyebrow">Studio Sessions</div>
+  <div class="h-sec">Every kind of session</div>
+  <p class="sub">Three ways the studio breathes — captured, mixed, and sent out into the universe.</p>
+  <div class="grid3">
+    <div class="scard"><div class="ico">🎙️</div><div class="hz">Live</div><h3>Live Sessions</h3><p>Full-band takes recorded live on the floor — raw energy, one room, no overdubs.</p></div>
+    <div class="scard"><div class="ico">🎚️</div><div class="hz">Recording</div><h3>Recording Sessions</h3><p>Tracked, layered, and mixed in the studio — produced records built piece by piece.</p></div>
+    <div class="scard"><div class="ico">🌀</div><div class="hz">Jam</div><h3>Jam Sessions</h3><p>Open, improvised, anything-goes. Where the grooves are born before they're songs.</p></div>
+  </div>
+</section>
+
+<!-- MUSIC PLAYER / LIBRARY -->
+<section id="player">
+  <div class="eyebrow">Music Library</div>
+  <div class="h-sec">The Player</div>
+  <p class="sub">Press play and let the engine carry the sound. Filter by session type, or just hit shuffle and drift.</p>
+
+  <div class="player">
+    <div>
+      <div class="np-art" id="npArt">
+        <div class="ringart"></div>
+        <div class="eq"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      </div>
+      <div class="np-meta">
+        <div class="np-title" id="npTitle">Select a track</div>
+        <div class="np-artist" id="npArtist">Newgroove Studio</div>
+      </div>
+      <div class="controls">
+        <button id="prev" title="Previous">⏮</button>
+        <button class="play" id="play" title="Play / Pause">▶</button>
+        <button id="next" title="Next">⏭</button>
+      </div>
+      <div class="seek">
+        <span id="cur">0:00</span>
+        <input type="range" id="seek" value="0" min="0" max="100" step="0.1">
+        <span id="dur">0:00</span>
+      </div>
+    </div>
+
+    <div>
+      <div class="pl-head">
+        <div class="chips">
+          <span class="chip active" data-cat="all">All</span>
+          <span class="chip" data-cat="live">Live</span>
+          <span class="chip" data-cat="recording">Recording</span>
+          <span class="chip" data-cat="jam">Jam</span>
+          <span class="chip" data-cat="wild">Out in the Wild</span>
+        </div>
+      </div>
+      <!-- Each .track: set data-src to an MP3 URL (or a SoundCloud-downloaded file) to make it play.
+           Leave data-src empty for now — the UI works, it just won't have audio yet. -->
+      <div class="tracklist" id="tracklist">
+        <div class="track" data-src="" data-title="Opening Frequency" data-artist="Newgroove Studio" data-cat="live"><span class="num">1</span><span class="ti"><b>Opening Frequency</b><span>Live session</span></span><span class="cat">Live</span><span class="dur">—:—</span></div>
+        <div class="track" data-src="" data-title="Too Tight (Saxy Ric)" data-artist="Newgroove Studio" data-cat="live"><span class="num">2</span><span class="ti"><b>Too Tight — Saxy Ric</b><span>Live rehearsal</span></span><span class="cat">Live</span><span class="dur">—:—</span></div>
+        <div class="track" data-src="" data-title="Velvet Room" data-artist="Newgroove Studio" data-cat="recording"><span class="num">3</span><span class="ti"><b>Velvet Room</b><span>Studio recording</span></span><span class="cat">Rec</span><span class="dur">—:—</span></div>
+        <div class="track" data-src="" data-title="Midnight Layers" data-artist="Newgroove Studio" data-cat="recording"><span class="num">4</span><span class="ti"><b>Midnight Layers</b><span>Studio recording</span></span><span class="cat">Rec</span><span class="dur">—:—</span></div>
+        <div class="track" data-src="" data-title="Free Groove No. 1" data-artist="Newgroove Studio" data-cat="jam"><span class="num">5</span><span class="ti"><b>Free Groove No. 1</b><span>Jam session</span></span><span class="cat">Jam</span><span class="dur">—:—</span></div>
+        <div class="track" data-src="" data-title="Circles (Plutonian Ode)" data-artist="Newgroove Studio" data-cat="wild"><span class="num">6</span><span class="ti"><b>Circles — Plutonian Ode</b><span>Recorded at Woodstock, Yasgur's Farm</span></span><span class="cat">Wild</span><span class="dur">—:—</span></div>
+        <div class="track" data-src="" data-title="Street Corner Take" data-artist="Newgroove Studio" data-cat="wild"><span class="num">7</span><span class="ti"><b>Street Corner Take</b><span>Out in the public domain</span></span><span class="cat">Wild</span><span class="dur">—:—</span></div>
+      </div>
+      <p class="note">Tip: paste an MP3 link (or your SoundCloud track) into each track's <code>data-src</code> to make it play. SoundCloud playlist embed can also drop in below this list.</p>
+    </div>
+  </div>
+  <audio id="audio"></audio>
+</section>
+
+<!-- VIDEO PLAYER -->
+<section id="video">
+  <div class="eyebrow">Studio Video</div>
+  <div class="h-sec">Watch the room</div>
+  <p class="sub">Session videos, performances, and studio films. Click a clip and it plays right here.</p>
+  <div class="video-wrap">
+    <div class="vframe" id="vframe">
+      <div class="vplaceholder" id="vplaceholder">
+        <div class="pbtn">▶</div>
+        <small>Pick a clip on the right. Add your YouTube video ID to each clip (<code>data-yt</code>) and it plays in this frame.</small>
+      </div>
+    </div>
+    <div class="vlist" id="vlist">
+      <!-- set data-yt to a YouTube video ID (the part after watch?v= ) -->
+      <div class="vitem" data-yt="" data-title="Live Session — Full Band"><div class="vthumb">▶</div><div><b>Live Session — Full Band</b><span>Live · 12 min</span></div></div>
+      <div class="vitem" data-yt="" data-title="Recording Day — Behind the Glass"><div class="vthumb">▶</div><div><b>Behind the Glass</b><span>Recording · 8 min</span></div></div>
+      <div class="vitem" data-yt="" data-title="Late Night Jam"><div class="vthumb">▶</div><div><b>Late Night Jam</b><span>Jam · 15 min</span></div></div>
+      <div class="vitem" data-yt="" data-title="Out in the Wild — Woodstock"><div class="vthumb">▶</div><div><b>Out in the Wild</b><span>Public domain · 6 min</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED ARTISTS -->
+<section id="artists">
+  <div class="eyebrow">Featured Artists</div>
+  <div class="h-sec">The voices on the frequency</div>
+  <p class="sub">The players, singers, and writers who pass through Newgroove. Each one has their own page — picture, bio, upcoming gigs, and the work they've done in the studio.</p>
+  <div class="artgrid">
+    <a class="acard" href="artists/featured-artist.html"><div class="photo">SR</div><div class="abody"><b>Saxy Ric</b><span>Saxophone</span><p>Horn lines that cut through the mix. Featured on the live sessions.</p></div></a>
+    <a class="acard" href="artists/featured-artist.html"><div class="photo">A2</div><div class="abody"><b>Artist Name</b><span>Vocals</span><p>Short tagline about this artist goes here.</p></div></a>
+    <a class="acard" href="artists/featured-artist.html"><div class="photo">A3</div><div class="abody"><b>Artist Name</b><span>Keys</span><p>Short tagline about this artist goes here.</p></div></a>
+    <a class="acard addcard" href="artists/featured-artist.html">+ Add an artist</a>
+  </div>
+</section>
+
+<!-- STUDIO GALLERY -->
+<section id="gallery">
+  <div class="eyebrow">Studio Gallery</div>
+  <div class="h-sec">Inside Newgroove</div>
+  <p class="sub">Pictures, video, and the projects that live here — what's on the board now and what we've already put out.</p>
+  <div class="tabs">
+    <span class="tab active" data-pane="photos">Photos</span>
+    <span class="tab" data-pane="reel">Video</span>
+    <span class="tab" data-pane="projects">Projects</span>
+  </div>
+  <div class="pane show" id="pane-photos">
+    <div class="gphotos">
+      <div class="gphoto">📷</div><div class="gphoto">📷</div><div class="gphoto">📷</div><div class="gphoto">📷</div><div class="gphoto">📷</div><div class="gphoto">📷</div><div class="gphoto">📷</div><div class="gphoto">📷</div>
+    </div>
+    <p class="note">Drop studio photos in here — swap each tile for an &lt;img&gt;.</p>
+  </div>
+  <div class="pane" id="pane-reel">
+    <div class="gphotos">
+      <div class="gphoto">🎬</div><div class="gphoto">🎬</div><div class="gphoto">🎬</div><div class="gphoto">🎬</div>
+    </div>
+    <p class="note">Studio video reel — embed YouTube clips here too.</p>
+  </div>
+  <div class="pane" id="pane-projects">
+    <div class="projlist">
+      <div class="proj"><span class="status live">Current</span><div><h4>Project Title — In Progress</h4><p>What this record/session is, who's on it, where it's headed.</p></div></div>
+      <div class="proj"><span class="status live">Current</span><div><h4>Another Current Project</h4><p>Short description of the work happening now.</p></div></div>
+      <div class="proj"><span class="status past">Released</span><div><h4>Past Project — Released</h4><p>Something already finished and out in the world.</p></div></div>
+      <div class="proj"><span class="status past">Released</span><div><h4>Earlier Release</h4><p>Another completed studio project.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Newgroove Studio is the Music frequency of <a href="index.html">Ion Productions</a>.</p>
+  <p style="margin-top:8px">Sound, Design, Art and Images — created by Glenroy on earth, uploaded to the universe.</p>
+  <p class="note">Placeholder build — swap in real tracks, videos, artist photos, and project details anytime.</p>
+</footer>
+
+</div>
+
+<script>
+// ── Hero wave (vibration) ──────────────────────────────
+(function(){
+  const cv=document.getElementById('waveHero');const ctx=cv.getContext('2d');
+  function size(){cv.width=cv.offsetWidth*devicePixelRatio;cv.height=cv.offsetHeight*devicePixelRatio;ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);}
+  size();addEventListener('resize',size);
+  function draw(t){
+    const w=cv.offsetWidth,h=cv.offsetHeight;ctx.clearRect(0,0,w,h);
+    const lines=[{a:34,s:.012,o:0,c:'rgba(58,166,255,.55)'},{a:24,s:.018,o:1.6,c:'rgba(125,212,255,.4)'},{a:46,s:.008,o:3.1,c:'rgba(58,166,255,.25)'}];
+    lines.forEach(L=>{ctx.beginPath();for(let x=0;x<=w;x+=6){const y=h/2+Math.sin(x*L.s+t*1.4+L.o)*L.a*Math.sin(x/w*Math.PI);x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.strokeStyle=L.c;ctx.lineWidth=2;ctx.stroke();});
+    requestAnimationFrame(()=>draw(t+.016));
+  }
+  draw(0);
+})();
+
+// ── Music player ───────────────────────────────────────
+(function(){
+  const audio=document.getElementById('audio');
+  const tracks=[...document.querySelectorAll('.track')];
+  const npTitle=document.getElementById('npTitle'),npArtist=document.getElementById('npArtist');
+  const npArt=document.getElementById('npArt'),playBtn=document.getElementById('play');
+  const seek=document.getElementById('seek'),curEl=document.getElementById('cur'),durEl=document.getElementById('dur');
+  let idx=-1;
+  const fmt=s=>isNaN(s)?'0:00':Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
+  function visible(){return tracks.filter(t=>t.style.display!=='none');}
+  function load(i,autoplay){
+    const list=visible();if(!list.length)return;
+    idx=((i%list.length)+list.length)%list.length;const t=list[idx];
+    tracks.forEach(x=>x.classList.remove('active'));t.classList.add('active');
+    npTitle.textContent=t.dataset.title;npArtist.textContent=t.dataset.artist;
+    const src=t.dataset.src;
+    if(src){audio.src=src;if(autoplay)audio.play();}
+    else{audio.removeAttribute('src');audio.load();npArtist.textContent=t.dataset.artist+' · (add a track link to play)';}
+  }
+  function toggle(){
+    if(idx<0)load(0,true);
+    else if(!audio.src){load(idx,true);}
+    else if(audio.paused)audio.play();else audio.pause();
+  }
+  playBtn.onclick=toggle;
+  document.getElementById('next').onclick=()=>load(idx+1,!audio.paused&&!!audio.src);
+  document.getElementById('prev').onclick=()=>load(idx-1,!audio.paused&&!!audio.src);
+  tracks.forEach((t)=>t.onclick=()=>{const i=visible().indexOf(t);load(i,true);});
+  audio.onplay=()=>{playBtn.textContent='⏸';npArt.classList.add('playing');};
+  audio.onpause=()=>{playBtn.textContent='▶';npArt.classList.remove('playing');};
+  audio.onended=()=>load(idx+1,true);
+  audio.ontimeupdate=()=>{if(audio.duration){seek.value=audio.currentTime/audio.duration*100;curEl.textContent=fmt(audio.currentTime);durEl.textContent=fmt(audio.duration);}};
+  seek.oninput=()=>{if(audio.duration)audio.currentTime=seek.value/100*audio.duration;};
+  // filter chips
+  document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{
+    document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));c.classList.add('active');
+    const cat=c.dataset.cat;let n=1;
+    tracks.forEach(t=>{const show=cat==='all'||t.dataset.cat===cat;t.style.display=show?'':'none';if(show)t.querySelector('.num').textContent=n++;});
+  });
+})();
+
+// ── Video player ───────────────────────────────────────
+(function(){
+  const frame=document.getElementById('vframe'),ph=document.getElementById('vplaceholder');
+  document.querySelectorAll('.vitem').forEach(v=>v.onclick=()=>{
+    document.querySelectorAll('.vitem').forEach(x=>x.classList.remove('active'));v.classList.add('active');
+    const id=v.dataset.yt;
+    if(!id){ph.querySelector('small').innerHTML='<b>'+v.dataset.title+'</b><br>Add this clip’s YouTube ID to <code>data-yt</code> to play it here.';return;}
+    frame.querySelector('iframe')?.remove();ph.style.display='none';
+    const f=document.createElement('iframe');
+    f.src='https://www.youtube.com/embed/'+id+'?autoplay=1&rel=0';
+    f.allow='accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture';f.allowFullscreen=true;
+    frame.appendChild(f);
+  });
+})();
+
+// ── Gallery tabs ───────────────────────────────────────
+document.querySelectorAll('.tab').forEach(tab=>tab.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));tab.classList.add('active');
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('show'));
+  document.getElementById('pane-'+tab.dataset.pane).classList.add('show');
+});
+</script>
+</body></html>

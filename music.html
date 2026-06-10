@@ -139,7 +139,6 @@ footer a{color:var(--electric)}
 .hero .planet::before{content:"";position:absolute;inset:-16%;border-radius:50%;background:radial-gradient(circle,rgba(58,166,255,.6),rgba(58,166,255,.16) 46%,transparent 70%);filter:blur(30px);z-index:0;animation:halo 5.5s ease-in-out infinite}
 .hero .planet-disk{position:relative;z-index:1;display:block;border-radius:50%;overflow:hidden;animation:floaty 7s ease-in-out infinite;filter:drop-shadow(0 0 34px rgba(58,166,255,.6))}
 .hero .planet-logo{width:100%;height:auto;display:block}
-.hero .planet-wave{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
 @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-13px)}}
 @keyframes halo{0%,100%{opacity:.55;transform:scale(.95)}50%{opacity:1;transform:scale(1.07)}}
 /* glow + shimmer on sessions & buttons */
@@ -174,7 +173,7 @@ footer a{color:var(--electric)}
   <canvas id="waveHero"></canvas>
   <div class="inner">
     <span class="freqtag">432 Hz · The Music Frequency</span>
-    <h1 class="planet"><span class="planet-disk"><img src="assets/newgroove-planet.jpg" alt="Newgroove Studio" class="planet-logo" width="720" height="720"><canvas class="planet-wave"></canvas></span></h1>
+    <h1 class="planet"><span class="planet-disk"><img src="assets/newgroove-planet.jpg" alt="Newgroove Studio" class="planet-logo" width="720" height="720"></span></h1>
     <p class="lead">The home of everything I make in sound — live sessions, studio recordings, late-night jams, and music caught out in the wild. Tune in and travel by frequency.</p>
     <div class="hcta">
       <a class="btn solid" href="#player">Open the player</a>
@@ -336,24 +335,6 @@ footer a{color:var(--electric)}
     const lines=[{a:54,s:.010,o:0,c:'rgba(58,166,255,.6)',w:2.5},{a:34,s:.017,o:1.6,c:'rgba(125,212,255,.5)',w:2},{a:70,s:.007,o:3.1,c:'rgba(58,166,255,.22)',w:3},{a:44,s:.013,o:2.2,c:'rgba(255,255,255,.8)',w:2}];
     lines.forEach(L=>{ctx.beginPath();for(let x=0;x<=w;x+=6){const y=h/2+Math.sin(x*L.s+t*1.4+L.o)*L.a*Math.sin(x/w*Math.PI);x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.strokeStyle=L.c;ctx.lineWidth=L.w;ctx.stroke();});
     requestAnimationFrame(()=>draw(t+.016));
-  }
-  draw(0);
-})();
-
-// black wave riding across the planet
-(function(){
-  var cv=document.querySelector('.planet-wave');if(!cv)return;var ctx=cv.getContext('2d');
-  function size(){var r=cv.getBoundingClientRect();cv.width=Math.max(2,r.width*devicePixelRatio);cv.height=Math.max(2,r.height*devicePixelRatio);ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);}
-  size();addEventListener('resize',size);
-  function draw(t){
-    var w=cv.clientWidth,h=cv.clientHeight;ctx.clearRect(0,0,w,h);
-    ctx.beginPath();
-    for(var x=0;x<=w;x+=4){var y=h*0.5+Math.sin(x*0.026 - t*2.3)*h*0.10;x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
-    ctx.strokeStyle='rgba(0,0,0,0.92)';ctx.lineWidth=Math.max(3,h*0.022);ctx.stroke();
-    ctx.beginPath();
-    for(var x2=0;x2<=w;x2+=4){var y2=h*0.5+Math.sin(x2*0.019 - t*1.6 + 1.3)*h*0.06;x2===0?ctx.moveTo(x2,y2):ctx.lineTo(x2,y2);}
-    ctx.strokeStyle='rgba(0,0,0,0.6)';ctx.lineWidth=Math.max(2,h*0.013);ctx.stroke();
-    requestAnimationFrame(function(){draw(t+0.016);});
   }
   draw(0);
 })();

@@ -134,6 +134,12 @@ section{margin-top:74px}
 footer{margin-top:90px;padding-top:34px;border-top:1px solid rgba(159,216,230,.14);text-align:center;color:var(--muted);font-size:13px}
 footer a{color:var(--electric)}
 .note{font-size:11px;color:#5d6678;font-style:italic;margin-top:10px}
+/* Newgroove planet logo */
+.hero h1.planet{width:min(440px,82%);margin:6px auto 2px;position:relative;background:none;filter:none;display:block;line-height:0}
+.hero .planet::before{content:"";position:absolute;inset:-11%;border-radius:50%;background:radial-gradient(circle,rgba(58,166,255,.5),transparent 66%);filter:blur(26px);z-index:0;animation:halo 5.5s ease-in-out infinite}
+.hero .planet-logo{position:relative;z-index:1;width:100%;height:auto;display:block;border-radius:50%;filter:drop-shadow(0 0 30px rgba(58,166,255,.5));animation:floaty 7s ease-in-out infinite}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-13px)}}
+@keyframes halo{0%,100%{opacity:.55;transform:scale(.95)}50%{opacity:1;transform:scale(1.07)}}
 </style></head>
 <body>
 <div class="cosmos"></div><div class="stars"></div>
@@ -156,7 +162,7 @@ footer a{color:var(--electric)}
   <canvas id="waveHero"></canvas>
   <div class="inner">
     <span class="freqtag">432 Hz · The Music Frequency</span>
-    <h1>Newgroove Studio</h1>
+    <h1 class="planet"><img src="assets/newgroove-planet.jpg" alt="Newgroove Studio" class="planet-logo" width="720" height="720"></h1>
     <p class="lead">The home of everything I make in sound — live sessions, studio recordings, late-night jams, and music caught out in the wild. Tune in and travel by frequency.</p>
     <div class="hcta">
       <a class="btn solid" href="#player">Open the player</a>

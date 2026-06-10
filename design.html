@@ -91,6 +91,15 @@ footer a{color:var(--accent)}
 .hero .glm-badge{position:absolute;top:0;right:0;width:128px;background:#fff;border-radius:12px;padding:7px;box-shadow:0 6px 22px rgba(0,0,0,.45);z-index:4}
 .hero .glm-badge img{width:100%;display:block;border-radius:6px}
 @media(max-width:640px){.hero .glm-badge{width:84px;top:-4px;right:-2px}}
+/* project gallery images */
+.ba img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.ba .after-img{z-index:0}
+.ba .before{z-index:1}
+.galsingles{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin-top:22px}
+.gs{position:relative;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.09)}
+.gs img{width:100%;display:block;aspect-ratio:4/3;object-fit:cover;transition:transform .35s}
+.gs:hover img{transform:scale(1.06)}
+.gs figcaption{position:absolute;left:0;right:0;bottom:0;padding:8px 12px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#ffd9b0;background:linear-gradient(transparent,rgba(0,0,0,.72))}
 </style></head>
 <body>
 <div class="cosmos"></div><div class="stars"></div>
@@ -146,23 +155,44 @@ footer a{color:var(--accent)}
   <p class="sub">Drag the slider on each project to reveal the before and after. Real project photos drop in here.</p>
   <div class="galgrid">
     <div class="proj">
-      <div class="ba"><div class="layer after">After</div><div class="layer before">Before</div><div class="divider"></div><span class="tagb">Before</span><span class="taga">After</span><input type="range" min="0" max="100" value="50" aria-label="Before and after slider"></div>
-      <div class="pbody"><div class="k">Remodel</div><h4>Project Title</h4><p>Short description — what the job was and what you did.</p></div>
+      <div class="ba"><img class="after-img" src="assets/projects/p2_after.jpg" alt="After — Deck to Stone Patio"><img class="before" src="assets/projects/p2_before.jpg" alt="Before — Deck to Stone Patio"><div class="divider"></div><span class="tagb">Before</span><span class="taga">After</span><input type="range" min="0" max="100" value="50" aria-label="Before and after slider"></div>
+      <div class="pbody"><div class="k">Decks & Outdoor</div><h4>Deck to Stone Patio</h4><p>Built a new outdoor living space — from framed deck to a finished stone patio.</p></div>
     </div>
     <div class="proj">
-      <div class="ba"><div class="layer after">After</div><div class="layer before">Before</div><div class="divider"></div><span class="tagb">Before</span><span class="taga">After</span><input type="range" min="0" max="100" value="50" aria-label="Before and after slider"></div>
-      <div class="pbody"><div class="k">Deck</div><h4>Project Title</h4><p>Short description — what the job was and what you did.</p></div>
+      <div class="ba"><img class="after-img" src="assets/projects/p4_after.jpg" alt="After — Living Room Built-in"><img class="before" src="assets/projects/p4_before.jpg" alt="Before — Living Room Built-in"><div class="divider"></div><span class="tagb">Before</span><span class="taga">After</span><input type="range" min="0" max="100" value="50" aria-label="Before and after slider"></div>
+      <div class="pbody"><div class="k">Remodels</div><h4>Living Room Built-in</h4><p>An empty room transformed with a custom entertainment built-in.</p></div>
     </div>
     <div class="proj">
-      <div class="ba"><div class="layer after">After</div><div class="layer before">Before</div><div class="divider"></div><span class="tagb">Before</span><span class="taga">After</span><input type="range" min="0" max="100" value="50" aria-label="Before and after slider"></div>
-      <div class="pbody"><div class="k">Finish Carpentry</div><h4>Project Title</h4><p>Short description — what the job was and what you did.</p></div>
+      <div class="ba"><img class="after-img" src="assets/projects/p5_after.jpg" alt="After — Built-in Shelving Wall"><img class="before" src="assets/projects/p5_before.jpg" alt="Before — Built-in Shelving Wall"><div class="divider"></div><span class="tagb">Before</span><span class="taga">After</span><input type="range" min="0" max="100" value="50" aria-label="Before and after slider"></div>
+      <div class="pbody"><div class="k">Custom Built-ins</div><h4>Built-in Shelving Wall</h4><p>Bare wall to custom, lit built-in shelving.</p></div>
     </div>
     <div class="proj">
-      <div class="ba"><div class="layer after">After</div><div class="layer before">Before</div><div class="divider"></div><span class="tagb">Before</span><span class="taga">After</span><input type="range" min="0" max="100" value="50" aria-label="Before and after slider"></div>
-      <div class="pbody"><div class="k">Built-in</div><h4>Project Title</h4><p>Short description — what the job was and what you did.</p></div>
+      <div class="ba"><img class="after-img" src="assets/projects/p6_after.jpg" alt="After — Wine Cellar Build"><img class="before" src="assets/projects/p6_before.jpg" alt="Before — Wine Cellar Build"><div class="divider"></div><span class="tagb">Before</span><span class="taga">After</span><input type="range" min="0" max="100" value="50" aria-label="Before and after slider"></div>
+      <div class="pbody"><div class="k">Custom Built-ins</div><h4>Wine Cellar Build</h4><p>Custom cellar shelving, built to fit the space.</p></div>
+    </div>
+    <div class="proj">
+      <div class="ba"><img class="after-img" src="assets/projects/p1_after.jpg" alt="After — Accent Wall & Cabinetry"><img class="before" src="assets/projects/p1_before.jpg" alt="Before — Accent Wall & Cabinetry"><div class="divider"></div><span class="tagb">Before</span><span class="taga">After</span><input type="range" min="0" max="100" value="50" aria-label="Before and after slider"></div>
+      <div class="pbody"><div class="k">Finish Carpentry</div><h4>Accent Wall & Cabinetry</h4><p>Brick accent wall paired with custom built-in cabinetry.</p></div>
+    </div>
+    <div class="proj">
+      <div class="ba"><img class="after-img" src="assets/projects/p3_after.jpg" alt="After — Custom Table"><img class="before" src="assets/projects/p3_before.jpg" alt="Before — Custom Table"><div class="divider"></div><span class="tagb">Before</span><span class="taga">After</span><input type="range" min="0" max="100" value="50" aria-label="Before and after slider"></div>
+      <div class="pbody"><div class="k">Finish Carpentry</div><h4>Custom Table</h4><p>A custom-built finished table piece.</p></div>
+    </div>
+    <div class="proj">
+      <div class="ba"><img class="after-img" src="assets/projects/p12_after.jpg" alt="After — Built-in Storage"><img class="before" src="assets/projects/p12_before.jpg" alt="Before — Built-in Storage"><div class="divider"></div><span class="tagb">Before</span><span class="taga">After</span><input type="range" min="0" max="100" value="50" aria-label="Before and after slider"></div>
+      <div class="pbody"><div class="k">Custom Built-ins</div><h4>Built-in Storage</h4><p>Custom storage built in and ready to use.</p></div>
     </div>
   </div>
-  <p class="note">Each project is a before/after slider — swap each panel for a real photo (an &lt;img&gt; behind the slider).</p>
+  <h3 style="font-family:'Sora';font-weight:600;font-size:18px;margin:46px 0 0;color:#ffd9b0">More from the shop</h3>
+  <div class="galsingles">
+    <figure class="gs"><img src="assets/projects/s7.jpg" alt="GLM Design &amp; Build project — Finish Carpentry" loading="lazy"><figcaption>Finish Carpentry</figcaption></figure>
+    <figure class="gs"><img src="assets/projects/s8.jpg" alt="GLM Design &amp; Build project — Remodel" loading="lazy"><figcaption>Remodel</figcaption></figure>
+    <figure class="gs"><img src="assets/projects/s9.jpg" alt="GLM Design &amp; Build project — Remodel" loading="lazy"><figcaption>Remodel</figcaption></figure>
+    <figure class="gs"><img src="assets/projects/s10.jpg" alt="GLM Design &amp; Build project — Custom Built-in" loading="lazy"><figcaption>Custom Built-in</figcaption></figure>
+    <figure class="gs"><img src="assets/projects/s11.jpg" alt="GLM Design &amp; Build project — Finish Carpentry" loading="lazy"><figcaption>Finish Carpentry</figcaption></figure>
+    <figure class="gs"><img src="assets/projects/s13.jpg" alt="GLM Design &amp; Build project — Remodel" loading="lazy"><figcaption>Remodel</figcaption></figure>
+  </div>
+  <p class="note">Real project photos — drag each slider for before/after. Titles and descriptions are easy to rename.</p>
 </section>
 
 <!-- PROCESS -->

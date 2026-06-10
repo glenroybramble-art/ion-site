@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Pencil Portraits — Travel with ION</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400&family=Space+Grotesk:wght@300;400;500;700&family=Sora:wght@200;400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#000; --panel:#070310;
+  --violet:#c873ff; --violet-2:#f0c0ff; --violet-dim:rgba(200,115,255,.45);
+  --txt:#efe6ff;
+  /* room geometry (px) */
+  --room-w:1200px; --room-h:700px; --depth:5600px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--void);color:var(--txt);font-family:'Space Grotesk',sans-serif;overflow-x:hidden}
+body{min-height:100vh}
+img{display:block}
+a{color:inherit;text-decoration:none}
+
+/* ---------- scroll driver ---------- */
+#scroller{position:relative;height:940vh;z-index:1;pointer-events:none}
+
+/* ---------- fixed 3D stage ---------- */
+.scene{position:fixed;inset:0;overflow:hidden;background:
+   radial-gradient(120% 90% at 50% 18%,rgba(200,115,255,.10),transparent 55%),
+   #000;
+  perspective:1000px;perspective-origin:50% 50%;z-index:0}
+.world{position:absolute;left:50%;top:50%;transform-style:preserve-3d;transform:translateZ(0)}
+
+.wall{position:absolute;left:0;top:0;transform-style:preserve-3d;
+  background:linear-gradient(180deg,rgba(200,115,255,.035),transparent 16%,transparent 84%,rgba(200,115,255,.035));
+  border:1px solid rgba(200,115,255,.20);
+  box-shadow:inset 0 0 50px rgba(200,115,255,.05)}
+
+/* ceiling = window into deep space (starfield + galaxies, black) */
+.ceiling,.floor{position:absolute;left:0;top:0;width:var(--room-w);height:var(--depth);
+  transform-style:preserve-3d;overflow:hidden}
+.ceiling{transform:translate(-50%,-50%) translateZ(calc(var(--depth)/-2)) translateY(calc(var(--room-h)/-2)) rotateX(-90deg);
+  background:
+    radial-gradient(38% 28% at 28% 62%, rgba(86,46,150,.18), transparent 70%),
+    radial-gradient(46% 32% at 72% 34%, rgba(40,64,150,.16), transparent 70%),
+    radial-gradient(130% 60% at 50% 30%, #0a0714, #000 74%)}
+.ceiling .stars{position:absolute;inset:0;width:100%;height:100%}
+.ceiling .galaxy{position:absolute;mix-blend-mode:screen;opacity:.95}
+/* floor = where the room's glow now lives */
+.floor{transform:translate(-50%,-50%) translateZ(calc(var(--depth)/-2)) translateY(calc(var(--room-h)/2)) rotateX(90deg);
+  background:
+    radial-gradient(75% 55% at 50% 22%, rgba(200,115,255,.24), transparent 72%),
+    linear-gradient(180deg,#0a0410,#040209);
+  box-shadow:inset 0 0 120px rgba(200,115,255,.16);
+  animation:floorglow 6s ease-in-out infinite}
+@keyframes floorglow{0%,100%{box-shadow:inset 0 0 90px rgba(200,115,255,.12)}50%{box-shadow:inset 0 0 165px rgba(200,115,255,.28)}}
+
+/* forward-walk button (mobile) */
+#fwd{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:42;width:60px;height:60px;border-radius:50%;
+  display:grid;place-items:center;cursor:pointer;color:var(--violet-2);
+  background:radial-gradient(circle,rgba(34,14,52,.9),rgba(8,3,14,.75));
+  border:1px solid rgba(200,115,255,.6);box-shadow:0 0 22px rgba(200,115,255,.5),inset 0 0 14px rgba(200,115,255,.22);
+  animation:fwdpulse 2.4s ease-in-out infinite;-webkit-tap-highlight-color:transparent;touch-action:none}
+#fwd svg{width:27px;height:27px}
+#fwd:active{transform:translateX(-50%) scale(.9)}
+#fwd.hide{opacity:0;pointer-events:none}
+@keyframes fwdpulse{0%,100%{box-shadow:0 0 16px rgba(200,115,255,.4),inset 0 0 10px rgba(200,115,255,.2)}
+  50%{box-shadow:0 0 32px rgba(200,115,255,.7),inset 0 0 16px rgba(200,115,255,.34)}}
+.wall.left{width:var(--depth);height:var(--room-h);
+  transform:translate(-50%,-50%) translateZ(calc(var(--depth)/-2)) translateX(calc(var(--room-w)/-2)) rotateY(90deg)}
+.wall.right{width:var(--depth);height:var(--room-h);
+  transform:translate(-50%,-50%) translateZ(calc(var(--depth)/-2)) translateX(calc(var(--room-w)/2)) rotateY(-90deg)}
+.wall.back{width:var(--room-w);height:var(--room-h);
+  transform:translate(-50%,-50%) translateZ(calc(var(--depth)*-1))}
+.wall.back .bk-title{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;
+  font-family:'Sora',sans-serif;font-weight:200;letter-spacing:.4em;font-size:34px;color:rgba(240,192,255,.30);text-transform:uppercase;z-index:2}
+.wall canvas.waves{position:absolute;inset:0;width:100%;height:100%;opacity:.55;mix-blend-mode:screen;pointer-events:none}
+
+/* drawings hung on the side walls */
+.art{position:absolute;cursor:pointer;transform:translateZ(12px);
+  transition:filter .35s ease}
+.art .frame{padding:14px;background:#060209;
+  border:1px solid rgba(200,115,255,.5);
+  box-shadow:0 0 18px rgba(200,115,255,.35), inset 0 0 10px rgba(200,115,255,.12);
+  transition:box-shadow .35s ease, transform .35s ease}
+.art .frame .mat{padding:8px;background:#0b0712;box-shadow:inset 0 0 0 1px rgba(200,115,255,.18)}
+.art img{width:100%;height:auto}
+.art .plate{margin-top:9px;text-align:center;font-family:'Plus Jakarta Sans',sans-serif;font-weight:300;
+  letter-spacing:.16em;text-transform:uppercase;font-size:10px;color:rgba(240,192,255,.6)}
+.art:hover .frame{box-shadow:0 0 30px rgba(200,115,255,.6), inset 0 0 14px rgba(200,115,255,.2);transform:translateZ(8px) scale(1.015)}
+
+/* ---------- nav ---------- */
+.nav{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;justify-content:space-between;
+  padding:16px 26px;background:linear-gradient(180deg,rgba(0,0,0,.85),transparent);pointer-events:auto}
+.nav .brand{display:flex;align-items:center;gap:12px}
+.nav .brand .mark{width:34px;height:34px;border-radius:50%;border:1px solid var(--violet-dim);
+  box-shadow:0 0 14px rgba(200,115,255,.4);display:grid;place-items:center;font-family:'Sora';font-weight:800;color:var(--violet-2);font-size:15px;background:#0a0612}
+.nav .brand b{font-family:'Sora',sans-serif;font-weight:600;letter-spacing:.18em;font-size:13px;text-transform:uppercase}
+.nav .brand span{display:block;font-weight:300;font-size:10px;letter-spacing:.22em;color:rgba(240,192,255,.55);text-transform:uppercase}
+.nav .links{display:flex;gap:20px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;font-weight:300}
+.nav .links a{opacity:.7;transition:opacity .25s,text-shadow .25s}
+.nav .links a:hover{opacity:1;text-shadow:0 0 10px var(--violet)}
+.nav .links a.here{opacity:1;color:var(--violet-2);text-shadow:0 0 12px var(--violet)}
+@media(max-width:640px){.nav .links{gap:13px;font-size:10px}.nav .brand span{display:none}}
+
+/* ---------- hero / intro card ---------- */
+/* floating sign in space — flat to the camera so it stays readable, hovering low off the floor */
+.skysign{position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%) translateZ(-950px) translateY(235px);
+  pointer-events:none;transition:opacity .3s linear}
+.signpanel{width:780px;text-align:center;animation:floatsign 6.5s ease-in-out infinite}
+@keyframes floatsign{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
+.signpanel .kick{font-family:'Plus Jakarta Sans',sans-serif;font-weight:200;letter-spacing:.5em;text-transform:uppercase;
+  font-size:18px;color:var(--violet-2);text-shadow:0 0 16px rgba(200,115,255,.7);padding-left:.5em}
+.signpanel .title{margin-top:12px;font-family:'Sora',sans-serif;font-weight:800;font-size:82px;line-height:1;
+  letter-spacing:.03em;background:linear-gradient(180deg,#fff,var(--violet-2) 55%,var(--violet));
+  -webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 28px rgba(200,115,255,.6))}
+.signpanel .instruction{margin-top:20px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:400;
+  letter-spacing:.02em;text-transform:none;font-size:34px;color:#fff;text-shadow:0 1px 2px #000, 0 0 18px rgba(200,115,255,.55)}
+
+/* ---------- enlarged viewer (lifts off wall) ---------- */
+#backdrop{position:fixed;inset:0;z-index:48;background:radial-gradient(circle at 50% 45%,rgba(20,6,32,.72),rgba(0,0,0,.92));
+  opacity:0;visibility:hidden;transition:opacity .45s ease, visibility .45s;backdrop-filter:blur(2px)}
+#backdrop.on{opacity:1;visibility:visible}
+#viewer{position:fixed;inset:0;z-index:50;pointer-events:none}
+#vfig{position:fixed;left:0;top:0;width:0;height:0;pointer-events:auto;cursor:pointer;
+  background:#060209;padding:18px;border:1px solid rgba(200,115,255,.6);
+  box-shadow:0 0 60px rgba(200,115,255,.5), inset 0 0 16px rgba(200,115,255,.2);
+  opacity:0;visibility:hidden;
+  transition:left .6s cubic-bezier(.22,.61,.36,1),top .6s cubic-bezier(.22,.61,.36,1),width .6s cubic-bezier(.22,.61,.36,1),height .6s cubic-bezier(.22,.61,.36,1),opacity .3s ease, transform .6s cubic-bezier(.22,.61,.36,1)}
+#vfig.on{opacity:1;visibility:visible}
+#vfig .mat{width:100%;height:100%;padding:10px;background:#0b0712;box-shadow:inset 0 0 0 1px rgba(200,115,255,.2);display:flex;align-items:center;justify-content:center}
+#vimg{max-width:100%;max-height:100%;width:auto;height:auto}
+#vcap{position:fixed;left:0;right:0;bottom:5vh;z-index:51;text-align:center;opacity:0;transition:opacity .4s ease .25s;pointer-events:none}
+#vcap.on{opacity:1}
+#vcap b{display:block;font-family:'Sora';font-weight:600;letter-spacing:.2em;text-transform:uppercase;font-size:15px;color:var(--violet-2);text-shadow:0 0 14px rgba(200,115,255,.6)}
+#vcap small{display:block;margin-top:6px;font-weight:300;letter-spacing:.24em;text-transform:uppercase;font-size:10px;color:rgba(239,230,255,.6)}
+#vcap em{display:block;margin-top:10px;font-style:normal;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:rgba(240,192,255,.45)}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <a class="brand" href="index.html">
+    <div class="mark">ION</div>
+    <div><b>Pencil Portraits</b><span>Ion Productions · Art</span></div>
+  </a>
+  <div class="links">
+    <a href="music.html">Music</a>
+    <a href="design.html">Design</a>
+    <a class="here" href="art.html">Art</a>
+    <a href="index.html">Images</a>
+    <a href="index.html">Home</a>
+  </div>
+</div>
+
+<div class="scene" id="scene">
+  <div class="world" id="world">
+    <div class="wall left"  id="wallL"><canvas class="waves" data-len="5600"></canvas></div>
+    <div class="wall right" id="wallR"><canvas class="waves" data-len="5600"></canvas></div>
+    <div class="floor" id="floor"></div>
+    <div class="ceiling" id="ceiling">
+      <canvas class="stars"></canvas>
+      <img class="galaxy" src="assets/galaxies/g1.jpg" alt="" style="left:13%;top:520px;width:330px">
+      <img class="galaxy" src="assets/galaxies/g4.jpg" alt="" style="left:58%;top:1480px;width:250px">
+      <img class="galaxy" src="assets/galaxies/g3.jpg" alt="" style="left:24%;top:2600px;width:300px">
+      <img class="galaxy" src="assets/galaxies/g5.jpg" alt="" style="left:62%;top:3720px;width:300px">
+      <img class="galaxy" src="assets/galaxies/g2.jpg" alt="" style="left:32%;top:4820px;width:260px">
+    </div>
+    <div class="wall back" id="wallB"><canvas class="waves" data-len="1200"></canvas></div>
+    <div class="skysign" id="sign">
+      <div class="signpanel">
+        <div class="kick">Ion Productions · Art</div>
+        <div class="title">Pencil Portraits</div>
+        <div class="instruction">Scroll to walk in · tap a drawing to bring it close</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="backdrop"></div>
+<div id="viewer">
+  <figure id="vfig"><div class="mat"><img id="vimg" alt=""></div></figure>
+</div>
+<div id="vcap"><b></b><small></small><em>Click the drawing to hang it back</em></div>
+
+<button id="fwd" aria-label="Walk forward">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 14 12 8 18 14"></polyline></svg>
+</button>
+
+<div id="scroller"></div>
+
+<script>
+(function(){
+  "use strict";
+  // ---- collection: side wall (L/R) + title + medium. Depth/height/width are auto-placed. ----
+  // To add more later: drop the file in assets/art/ and add a row here.
+  var PIECES = [
+    {f:"three-sisters",              t:"Three Sisters",          m:"Graphite on paper", side:"L"},
+    {f:"vanessa",                    t:"Vanessa",                m:"Graphite on paper", side:"R"},
+    {f:"lady-with-fan-and-vase",     t:"Lady with Fan & Vase",   m:"Graphite on paper", side:"L"},
+    {f:"little-sisters",             t:"Little Sisters",         m:"Graphite on paper", side:"R"},
+    {f:"woman-in-green",             t:"Woman in Green",         m:"Colored pencil",    side:"L"},
+    {f:"george",                     t:"George",                 m:"Graphite on paper", side:"R"},
+    {f:"little-miss-bronx",          t:"Little Miss Bronx",      m:"Graphite on paper", side:"L"},
+    {f:"closeup",                    t:"Close-up",               m:"Charcoal study",    side:"R"},
+    {f:"sandra-in-color",            t:"Sandra in Color",        m:"Colored pencil",    side:"L"},
+    {f:"jennifer-in-charcoal",       t:"Jennifer in Charcoal",   m:"Charcoal on paper", side:"R"},
+    {f:"self-portrait-for-art-class",t:"Self-Portrait",          m:"Graphite, self-portrait", side:"L"},
+    {f:"tracy",                      t:"Tracy",                  m:"Graphite on paper", side:"R"},
+    {f:"sandra-in-black-and-white",  t:"Sandra in Black & White",m:"Graphite on paper", side:"L"},
+    {f:"madonna",                    t:"Madonna",                m:"Graphite on paper", side:"R"},
+    {f:"janet-jackson",              t:"Janet Jackson",          m:"Graphite on paper", side:"L"},
+    {f:"sade",                       t:"Sade",                   m:"Graphite on paper", side:"R"},
+    {f:"rich",                       t:"Rich",                   m:"Graphite on paper", side:"L"},
+    {f:"rea-dawn-chong",             t:"Rae Dawn Chong",         m:"Graphite on paper", side:"R"},
+    {f:"tom",                        t:"Tom",                    m:"Graphite on paper", side:"L"},
+    {f:"david",                      t:"David",                  m:"Graphite on paper", side:"R"},
+    {f:"hillary",                    t:"Hillary",                m:"Graphite on paper", side:"L"},
+    {f:"judith",                     t:"Judith",                 m:"Graphite on paper", side:"R"},
+    {f:"ruth",                       t:"Ruth",                   m:"Graphite on paper", side:"L"},
+    {f:"vicky",                      t:"Vicky",                  m:"Graphite on paper", side:"R"},
+    {f:"gaye",                       t:"Gaye",                   m:"Graphite on paper", side:"L"},
+    {f:"leather-cap",                t:"Leather Cap",            m:"Graphite on paper", side:"R"},
+    {f:"beautician",                 t:"The Beautician",         m:"Graphite on paper", side:"L"},
+    {f:"hair-model-one",             t:"Hair Model",             m:"Graphite on paper", side:"R"}
+  ];
+
+  var wallL = document.getElementById("wallL");
+  var wallR = document.getElementById("wallR");
+  var world = document.getElementById("world");
+  var wallB = document.getElementById("wallB");
+  var floorEl = document.getElementById("floor");
+  var ceilEl  = document.getElementById("ceiling");
+  var sign  = document.getElementById("sign");
+  var fwd   = document.getElementById("fwd");
+  var arts  = [];
+  var BACKDIST = 2600, EMERGE = 520;   // back wall sits a fixed distance ahead; art fades in as it emerges
+
+  // auto-placement along each wall: staggered heights + widths so nothing lines up flat
+  var THEIGHTS = [110, 290, 165, 250, 130, 300, 205, 175];
+  var WIDTHS   = [300, 250, 275, 215, 295, 235, 260];
+  var START_L = 340, START_R = 520, SPACING = 350;
+  var iL = 0, iR = 0;
+
+  PIECES.forEach(function(p, gi){
+    var el = document.createElement("div");
+    el.className = "art";
+    var depth, hi;
+    if (p.side === "L"){ depth = START_L + iL*SPACING; hi = iL; iL++; }
+    else               { depth = START_R + iR*SPACING; hi = iR; iR++; }
+    el.style.left  = depth + "px";
+    el.style.top   = THEIGHTS[hi % THEIGHTS.length] + "px";
+    el.style.width = WIDTHS[gi % WIDTHS.length] + "px";
+    el.dataset.title  = p.t;
+    el.dataset.medium = p.m;
+    el.dataset.basez  = -depth;   // base world-Z (before camera) on its wall
+    el.innerHTML =
+      '<div class="frame"><div class="mat"><img src="assets/art/'+p.f+'.jpg" alt="'+p.t+'" loading="lazy"></div></div>'+
+      '<div class="plate">'+p.t+'</div>';
+    (p.side === "L" ? wallL : wallR).appendChild(el);
+    el.addEventListener("click", function(e){ e.stopPropagation(); open(el); });
+    arts.push(el);
+  });
+
+  // ---------- scroll → camera walk ----------
+  var CAM_MAX = 5000;          // px walked into the room
+  var cam = 0, target = 0, raf = null;
+  function maxScroll(){ return Math.max(1, document.getElementById("scroller").offsetHeight - window.innerHeight); }
+  function onScroll(){
+    if (viewerOpen) return;
+    var pr = Math.min(1, Math.max(0, window.scrollY / maxScroll()));
+    target = pr * CAM_MAX;
+    // fade the back-wall signage as you approach it
+    sign.style.opacity = Math.max(0, 1 - pr*1.4);
+    loop();
+  }
+  function loop(){
+    if (raf) return;
+    raf = requestAnimationFrame(step);
+  }
+  function step(){
+    raf = null;
+    cam += (target - cam) * 0.12;
+    if (Math.abs(target - cam) < 0.4) cam = target;
+    world.style.transform = "translateZ(" + cam + "px)";
+    // keep the back wall a constant size/perspective — cancel the walk so only the side walls move
+    wallB.style.transform = "translate(-50%,-50%) translateZ(" + (-BACKDIST - cam) + "px)";
+    // floor + ceiling stay static (cancel the walk) so only the side walls scroll
+    var anti = "translateZ(" + (-cam) + "px) translate(-50%,-50%) ";
+    floorEl.style.transform = anti + "translateZ(-2800px) translateY(350px) rotateX(90deg)";
+    ceilEl.style.transform  = anti + "translateZ(-2800px) translateY(-350px) rotateX(-90deg)";
+    for (var i=0;i<arts.length;i++){
+      var eff = parseFloat(arts[i].dataset.basez) + cam;   // world z relative to camera
+      var op;
+      if (eff < -BACKDIST)  op = Math.max(0, 1 - (-BACKDIST - eff)/EMERGE); // emerging from the far wall
+      else if (eff > -120)  op = Math.max(0, 1 - (eff + 120)/240);         // passing the camera
+      else                  op = 1;
+      arts[i].style.opacity = op;
+      arts[i].style.pointerEvents = op < 0.5 ? "none" : "auto";
+    }
+    if (cam !== target) loop();
+  }
+  window.addEventListener("scroll", onScroll, {passive:true});
+  window.addEventListener("resize", onScroll);
+
+  // ---------- enlarged viewer (FLIP: lift off wall → float in front) ----------
+  var backdrop = document.getElementById("backdrop");
+  var vfig = document.getElementById("vfig");
+  var vimg = document.getElementById("vimg");
+  var vcap = document.getElementById("vcap");
+  var viewerOpen = false, current = null;
+
+  function frameRect(el){
+    return el.querySelector(".frame").getBoundingClientRect();
+  }
+  function setBox(r){
+    vfig.style.left = r.left + "px";
+    vfig.style.top  = r.top  + "px";
+    vfig.style.width  = r.width  + "px";
+    vfig.style.height = r.height + "px";
+  }
+  function targetBox(){
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var maxW = vw * 0.82, maxH = vh * 0.78;
+    var ar = (vimg.naturalWidth && vimg.naturalHeight) ? vimg.naturalWidth/vimg.naturalHeight : 0.8;
+    // figure has 18px pad + mat 10px pad => ~56px chrome total
+    var pad = 56;
+    var w = maxW, h = (w - pad)/ar + pad;
+    if (h > maxH){ h = maxH; w = (h - pad)*ar + pad; }
+    return { left:(vw - w)/2, top:(vh - h)/2, width:w, height:h };
+  }
+  function open(el){
+    if (viewerOpen) return;
+    viewerOpen = true; current = el;
+    if (fwd) fwd.classList.add("hide");
+    var start = frameRect(el);
+    vimg.src = el.querySelector("img").src;
+    // place exactly over the wall piece (flat to screen)
+    vfig.style.transition = "none";
+    setBox(start);
+    vfig.classList.add("on");
+    backdrop.classList.add("on");
+    // caption
+    vcap.querySelector("b").textContent = el.dataset.title;
+    vcap.querySelector("small").textContent = el.dataset.medium;
+    var go = function(){
+      vfig.style.transition = "";
+      var t = targetBox();
+      setBox(t);
+      vcap.classList.add("on");
+    };
+    if (vimg.complete && vimg.naturalWidth){ requestAnimationFrame(function(){ requestAnimationFrame(go); }); }
+    else { vimg.onload = function(){ requestAnimationFrame(function(){ requestAnimationFrame(go); }); }; }
+  }
+  function close(){
+    if (!viewerOpen || !current) return;
+    if (fwd) fwd.classList.remove("hide");
+    var back = frameRect(current);
+    vcap.classList.remove("on");
+    backdrop.classList.remove("on");
+    setBox(back);
+    var done = function(){
+      vfig.classList.remove("on");
+      vfig.removeEventListener("transitionend", done);
+    };
+    vfig.addEventListener("transitionend", done);
+    viewerOpen = false; current = null;
+  }
+  vfig.addEventListener("click", function(e){ e.stopPropagation(); close(); });
+  backdrop.addEventListener("click", close);
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape") close(); });
+  // block walking while a piece is held in front
+  window.addEventListener("wheel",  function(e){ if (viewerOpen) e.preventDefault(); }, {passive:false});
+  window.addEventListener("touchmove", function(e){ if (viewerOpen) e.preventDefault(); }, {passive:false});
+
+  // ---------- wave fields on the walls (flow from the horizon toward you) ----------
+  var waveCanvases = [];
+  Array.prototype.forEach.call(document.querySelectorAll("canvas.waves"), function(cv){
+    var len = parseInt(cv.dataset.len, 10) || 1500;
+    cv.width  = Math.round(len / 3);   // internal res (CSS stretches to full wall)
+    cv.height = 234;                   // ~ room height / 3
+    waveCanvases.push({ cv:cv, ctx:cv.getContext("2d") });
+  });
+  var LINES = [
+    {col:"rgba(200,115,255,0.85)", amp:0.10, freq:0.9, speed:1.7, off:0.0,  base:0.50, lw:2},
+    {col:"rgba(240,192,255,0.70)", amp:0.07, freq:1.4, speed:2.3, off:1.1,  base:0.42, lw:1.5},
+    {col:"rgba(160,90,235,0.50)",  amp:0.13, freq:0.6, speed:1.2, off:2.2,  base:0.62, lw:2.5},
+    {col:"rgba(255,255,255,0.55)", amp:0.05, freq:1.9, speed:2.8, off:3.3,  base:0.34, lw:1}
+  ];
+  function drawWaves(o, t){
+    var ctx = o.ctx, W = o.cv.width, H = o.cv.height;
+    ctx.clearRect(0,0,W,H);
+    for (var i=0;i<LINES.length;i++){
+      var L = LINES[i];
+      ctx.beginPath();
+      ctx.lineWidth = L.lw;
+      ctx.strokeStyle = L.col;
+      ctx.shadowColor = L.col;
+      ctx.shadowBlur = 10;
+      var baseY = H * L.base, amp = H * L.amp;
+      for (var x=0; x<=W; x+=6){
+        // +t makes crests travel toward x=0 = the front edge (toward the viewer)
+        var y = baseY + amp * Math.sin(x*0.012*L.freq + t*L.speed + L.off)
+                      + amp*0.35 * Math.sin(x*0.03*L.freq - t*L.speed*0.6);
+        if (x===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      }
+      ctx.stroke();
+    }
+    ctx.shadowBlur = 0;
+  }
+  // ---------- ceiling starfield (static, natural — drawn once) ----------
+  (function(){
+    var cv = document.querySelector(".ceiling .stars");
+    if (!cv) return;
+    var W = 700, H = 1800; cv.width = W; cv.height = H;
+    var c = cv.getContext("2d");
+    for (var i=0;i<1100;i++){
+      var x=Math.random()*W, y=Math.random()*H;
+      var r=Math.pow(Math.random(),2.2)*1.7+0.25;          // mostly tiny, a few larger
+      var tint=Math.random();
+      c.globalAlpha = 0.35 + Math.random()*0.65;
+      c.fillStyle = tint<0.10 ? "#bfd0ff" : (tint<0.20 ? "#ffd9b0" : (tint<0.30 ? "#e9c8ff" : "#ffffff"));
+      c.beginPath(); c.arc(x,y,r,0,6.283); c.fill();
+    }
+    for (var j=0;j<26;j++){                                 // a few brighter stars with soft glow
+      var bx=Math.random()*W, by=Math.random()*H, br=Math.random()*1.3+1.3;
+      var g=c.createRadialGradient(bx,by,0,bx,by,br*6);
+      g.addColorStop(0,"rgba(255,255,255,0.9)");
+      g.addColorStop(0.4,"rgba(200,180,255,0.32)");
+      g.addColorStop(1,"rgba(255,255,255,0)");
+      c.globalAlpha=1; c.fillStyle=g; c.beginPath(); c.arc(bx,by,br*6,0,6.283); c.fill();
+      c.fillStyle="#fff"; c.beginPath(); c.arc(bx,by,br,0,6.283); c.fill();
+    }
+    c.globalAlpha = 1;
+  })();
+
+  var wt = 0, last = performance.now();
+  (function waveLoop(now){
+    var dt = Math.min(0.05, (now - last)/1000); last = now;
+    wt += dt;
+    for (var i=0;i<waveCanvases.length;i++) drawWaves(waveCanvases[i], wt);
+    requestAnimationFrame(waveLoop);
+  })(last);
+
+  // ---------- forward-walk button (mobile) ----------
+  var holding = false;
+  function advance(){ if (!holding) return; window.scrollBy(0, 30); requestAnimationFrame(advance); }
+  if (fwd){
+    fwd.addEventListener("pointerdown", function(e){ e.preventDefault(); holding = true; advance(); });
+    ["pointerup","pointercancel","pointerleave"].forEach(function(ev){ fwd.addEventListener(ev, function(){ holding = false; }); });
+    window.addEventListener("pointerup", function(){ holding = false; });
+  }
+
+  onScroll();
+})();
+</script>
+</body>
+</html>

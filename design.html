@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GLM Design &amp; Build — Design · Ion Productions</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Sora:wght@200;400;600;800&display=swap');
+:root{--void:#04040a;--ion:#9fd8e6;--ion-bright:#ffe6cc;--accent:#ff7a2c;--accent-deep:#d65f18;--ink:#e8eef5;--muted:#8893a6}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--ink);font-family:'Space Grotesk',sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1180px;margin:0 auto;padding:0 26px 100px}
+.cosmos{position:fixed;inset:0;z-index:-2;background:radial-gradient(120% 80% at 50% -10%,#1c130a 0%,#0d0905 45%,#040302 100%)}
+.stars{position:fixed;inset:0;z-index:-1;background-image:radial-gradient(1px 1px at 12% 18%,#fff,transparent),radial-gradient(1px 1px at 80% 12%,#fde,transparent),radial-gradient(1px 1px at 62% 30%,#fff,transparent),radial-gradient(1px 1px at 30% 58%,#fdb,transparent),radial-gradient(1.5px 1.5px at 88% 48%,#fff,transparent),radial-gradient(1px 1px at 22% 78%,#fff,transparent),radial-gradient(1px 1px at 48% 90%,#fff,transparent),radial-gradient(1px 1px at 70% 70%,#fff,transparent),radial-gradient(1.5px 1.5px at 92% 84%,#fec,transparent);opacity:.5}
+/* nav */
+nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);background:rgba(8,5,2,.6);border-bottom:1px solid rgba(255,122,44,.16)}
+.navin{max-width:1180px;margin:0 auto;padding:14px 26px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:'Sora',sans-serif;font-weight:800;letter-spacing:.02em}
+.brand .ring{width:30px;height:30px;border-radius:50%;border:2px solid var(--accent);box-shadow:0 0 14px rgba(255,122,44,.7),inset 0 0 8px rgba(255,122,44,.5);position:relative;flex:none}
+.brand .ring::after{content:"";position:absolute;inset:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent)}
+.brand small{display:block;font-family:'Space Grotesk';font-weight:400;font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--muted)}
+.navlinks{display:flex;gap:22px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.navlinks a{transition:color .2s}
+.navlinks a:hover{color:var(--ink)}
+.navlinks a.active{color:var(--accent)}
+@media(max-width:720px){.navlinks{display:none}}
+/* hero */
+.hero{position:relative;text-align:center;padding:84px 0 56px}
+.hero canvas{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:100%;height:340px;z-index:0;opacity:.9;pointer-events:none}
+.hero .inner{position:relative;z-index:2}
+.freqtag{display:inline-block;font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--accent);border:1px solid rgba(255,122,44,.4);border-radius:40px;padding:7px 18px;margin-bottom:22px;background:rgba(255,122,44,.08)}
+.hero h1{font-family:'Sora',sans-serif;font-weight:800;font-size:clamp(38px,7.6vw,82px);line-height:1;letter-spacing:-.02em;background:linear-gradient(135deg,#fff0e2,#ffb27a 45%,#ff7a2c 80%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 22px rgba(255,122,44,.4))}
+.role{color:var(--accent);font-size:15px;letter-spacing:.2em;text-transform:uppercase;margin-top:14px}
+.hero p.lead{max-width:600px;margin:16px auto 0;color:#c9bcae;font-size:17px}
+.hcta{margin-top:30px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-block;padding:13px 26px;border-radius:40px;font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:500;cursor:pointer;transition:transform .15s,box-shadow .3s}
+.btn:hover{transform:translateY(-2px)}
+.btn.solid{background:linear-gradient(90deg,var(--accent),var(--accent-deep));color:#fff;box-shadow:0 0 24px rgba(255,122,44,.5)}
+.btn.ghost{border:1px solid rgba(255,200,150,.4);color:var(--ion-bright);background:rgba(255,122,44,.08)}
+/* section */
+section{margin-top:74px}
+.eyebrow{font-family:'Sora';font-weight:600;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:12px}
+.eyebrow::before{content:"";width:26px;height:1px;background:var(--accent);box-shadow:0 0 8px var(--accent)}
+.h-sec{font-family:'Sora';font-weight:800;font-size:clamp(26px,4vw,40px);letter-spacing:-.01em;margin:14px 0 8px}
+.sub{color:var(--muted);max-width:640px;font-size:15.5px}
+/* services */
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;margin-top:30px}
+.scard{position:relative;border-radius:16px;padding:26px 22px;border:1px solid rgba(255,255,255,.09);background:linear-gradient(160deg,rgba(255,122,44,.08),rgba(22,15,8,.4));overflow:hidden;transition:transform .2s,border-color .2s}
+.scard:hover{transform:translateY(-4px);border-color:rgba(255,122,44,.45)}
+.scard .ico{font-size:24px;margin-bottom:8px;filter:drop-shadow(0 0 8px var(--accent))}
+.scard h3{font-family:'Sora';font-weight:800;font-size:19px;margin:4px 0 8px}
+.scard p{font-size:14px;color:#c2b6a8}
+/* gallery before/after */
+.galgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;margin-top:30px}
+.proj{border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.09);background:rgba(22,15,8,.4)}
+.ba{position:relative;aspect-ratio:4/3;overflow:hidden;user-select:none}
+.ba .layer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Sora';font-weight:700;letter-spacing:.2em;text-transform:uppercase;font-size:13px}
+.ba .after{background:linear-gradient(135deg,#2a1c0e,#52340f);color:#ffd9b0}
+.ba .before{background:repeating-linear-gradient(45deg,#1a1206,#1a1206 12px,#221708 12px,#221708 24px);color:#a98a63;clip-path:inset(0 50% 0 0)}
+.ba .tagb,.ba .taga{position:absolute;top:10px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;padding:4px 10px;border-radius:20px;background:rgba(0,0,0,.55)}
+.ba .tagb{left:10px;color:#a98a63}.ba .taga{right:10px;color:#ffd9b0}
+.ba input{position:absolute;bottom:10px;left:8%;width:84%;-webkit-appearance:none;height:4px;border-radius:3px;background:rgba(255,255,255,.4);cursor:ew-resize;z-index:3}
+.ba input::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent);border:2px solid #fff}
+.ba input::-moz-range-thumb{width:18px;height:18px;border:2px solid #fff;border-radius:50%;background:var(--accent)}
+.ba .divider{position:absolute;top:0;bottom:0;width:2px;background:var(--accent);box-shadow:0 0 10px var(--accent);left:50%;z-index:2;pointer-events:none}
+.proj .pbody{padding:16px 18px}
+.proj .pbody .k{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.proj .pbody h4{font-family:'Sora';font-weight:600;font-size:18px;margin:5px 0 5px}
+.proj .pbody p{font-size:13.5px;color:var(--muted)}
+/* process */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-top:30px}
+.step{position:relative;padding:24px 20px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(22,15,8,.4)}
+.step .n{font-family:'Sora';font-weight:800;font-size:40px;color:rgba(255,122,44,.35);line-height:1}
+.step h4{font-family:'Sora';font-weight:600;font-size:17px;margin:8px 0 6px}
+.step p{font-size:13.5px;color:var(--muted)}
+/* testimonials */
+.quotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:30px}
+.quote{padding:24px;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:rgba(22,15,8,.4)}
+.quote p{font-size:15px;color:#d6cabb;font-style:italic}
+.quote .who{margin-top:14px;font-size:13px;color:var(--accent);letter-spacing:.08em}
+.quote .stars5{color:var(--accent);letter-spacing:2px;margin-bottom:10px}
+/* contact */
+.contact{margin-top:34px;border-radius:20px;padding:36px;text-align:center;border:1px solid rgba(255,122,44,.25);background:radial-gradient(120% 120% at 50% 0%,rgba(255,122,44,.12),rgba(13,9,5,.6))}
+.contact h3{font-family:'Sora';font-weight:800;font-size:clamp(22px,3.4vw,32px)}
+.contact p{color:#c2b6a8;margin:10px auto 22px;max-width:480px}
+.cmeta{display:flex;gap:26px;justify-content:center;flex-wrap:wrap;margin-top:18px;font-size:14px;color:var(--muted)}
+.cmeta b{color:var(--ink);font-weight:500}
+footer{margin-top:90px;padding-top:34px;border-top:1px solid rgba(255,122,44,.16);text-align:center;color:var(--muted);font-size:13px}
+footer a{color:var(--accent)}
+.note{font-size:11px;color:#6b5d4b;font-style:italic;margin-top:10px}
+</style></head>
+<body>
+<div class="cosmos"></div><div class="stars"></div>
+
+<nav><div class="navin">
+  <a class="brand" href="index.html"><span class="ring"></span><span>Ion Productions<small>Sound · Design · Art · Images</small></span></a>
+  <div class="navlinks">
+    <a href="music.html">Music</a>
+    <a href="design.html" class="active">Design</a>
+    <a href="index.html#frequencies">Art</a>
+    <a href="index.html#frequencies">Images</a>
+    <a href="index.html">Home</a>
+  </div>
+</div></nav>
+
+<div class="wrap">
+
+<!-- HERO -->
+<header class="hero">
+  <canvas id="waveHero"></canvas>
+  <div class="inner">
+    <span class="freqtag">528 Hz · The Design Frequency</span>
+    <h1>GLM Design &amp; Build</h1>
+    <div class="role">Your Personal Master Carpenter</div>
+    <p class="lead">Custom carpentry and full builds — framing to finish, decks to remodels. Craftsmanship that carries a project from blueprint to the real world.</p>
+    <div class="hcta">
+      <a class="btn solid" href="#gallery">See the work</a>
+      <a class="btn ghost" href="#contact">Request a quote</a>
+    </div>
+  </div>
+</header>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="eyebrow">Services</div>
+  <div class="h-sec">What I build</div>
+  <p class="sub">From a single repair to a full build-out — quality work, done right, on time.</p>
+  <div class="grid3">
+    <div class="scard"><div class="ico">📐</div><h3>Finish Carpentry</h3><p>Trim, doors, built-ins, cabinetry, stairs — the detail work that makes a space feel finished.</p></div>
+    <div class="scard"><div class="ico">🏗️</div><h3>Framing &amp; Structural</h3><p>Walls, floors, additions, and structural repairs — solid bones built to code.</p></div>
+    <div class="scard"><div class="ico">🌳</div><h3>Decks &amp; Outdoor</h3><p>Decks, porches, pergolas, and outdoor structures designed to last the seasons.</p></div>
+    <div class="scard"><div class="ico">🔨</div><h3>Remodels &amp; Renovations</h3><p>Kitchens, baths, and whole-room remodels — reimagined and rebuilt.</p></div>
+    <div class="scard"><div class="ico">🪟</div><h3>Custom Built-ins</h3><p>Shelving, closets, benches, and one-off pieces made to fit your space exactly.</p></div>
+    <div class="scard"><div class="ico">🛠️</div><h3>Repairs &amp; Restoration</h3><p>Rot repair, restoration, and the fixes that bring older work back to life.</p></div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="eyebrow">Project Gallery</div>
+  <div class="h-sec">The work</div>
+  <p class="sub">Drag the slider on each project to reveal the before and after. Real project photos drop in here.</p>
+  <div class="galgrid">
+    <div class="proj">
+      <div class="ba"><div class="layer after">After</div><div class="layer before">Before</div><div class="divider"></div><span class="tagb">Before</span><span class="taga">After</span><input type="range" min="0" max="100" value="50" aria-label="Before and after slider"></div>
+      <div class="pbody"><div class="k">Remodel</div><h4>Project Title</h4><p>Short description — what the job was and what you did.</p></div>
+    </div>
+    <div class="proj">
+      <div class="ba"><div class="layer after">After</div><div class="layer before">Before</div><div class="divider"></div><span class="tagb">Before</span><span class="taga">After</span><input type="range" min="0" max="100" value="50" aria-label="Before and after slider"></div>
+      <div class="pbody"><div class="k">Deck</div><h4>Project Title</h4><p>Short description — what the job was and what you did.</p></div>
+    </div>
+    <div class="proj">
+      <div class="ba"><div class="layer after">After</div><div class="layer before">Before</div><div class="divider"></div><span class="tagb">Before</span><span class="taga">After</span><input type="range" min="0" max="100" value="50" aria-label="Before and after slider"></div>
+      <div class="pbody"><div class="k">Finish Carpentry</div><h4>Project Title</h4><p>Short description — what the job was and what you did.</p></div>
+    </div>
+    <div class="proj">
+      <div class="ba"><div class="layer after">After</div><div class="layer before">Before</div><div class="divider"></div><span class="tagb">Before</span><span class="taga">After</span><input type="range" min="0" max="100" value="50" aria-label="Before and after slider"></div>
+      <div class="pbody"><div class="k">Built-in</div><h4>Project Title</h4><p>Short description — what the job was and what you did.</p></div>
+    </div>
+  </div>
+  <p class="note">Each project is a before/after slider — swap each panel for a real photo (an &lt;img&gt; behind the slider).</p>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="eyebrow">How I Work</div>
+  <div class="h-sec">From idea to finished build</div>
+  <p class="sub">A clear, honest process so you always know where the job stands.</p>
+  <div class="steps">
+    <div class="step"><div class="n">01</div><h4>Consultation</h4><p>We walk the space, talk through what you want, and I take measurements and notes.</p></div>
+    <div class="step"><div class="n">02</div><h4>Design &amp; Estimate</h4><p>A clear plan and a detailed, no-surprise estimate — materials, timeline, and cost.</p></div>
+    <div class="step"><div class="n">03</div><h4>Build</h4><p>Careful, clean work on site. You're kept in the loop at every stage.</p></div>
+    <div class="step"><div class="n">04</div><h4>Finish &amp; Walkthrough</h4><p>Final details, a full walkthrough together, and a clean site when I leave.</p></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="eyebrow">Testimonials</div>
+  <div class="h-sec">What clients say</div>
+  <div class="quotes">
+    <div class="quote"><div class="stars5">★★★★★</div><p>"Placeholder quote — a client's words about the quality of the work and the experience of working with you."</p><div class="who">— Client Name, Project type</div></div>
+    <div class="quote"><div class="stars5">★★★★★</div><p>"Another placeholder testimonial. Swap these for real reviews from your clients."</p><div class="who">— Client Name, Project type</div></div>
+    <div class="quote"><div class="stars5">★★★★★</div><p>"A third short, glowing quote about craftsmanship, reliability, and finish."</p><div class="who">— Client Name, Project type</div></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="eyebrow">Get in Touch</div>
+  <div class="h-sec">Start your project</div>
+  <div class="contact">
+    <h3>Let's build something.</h3>
+    <p>Tell me about your project and I'll get back to you with next steps and an estimate.</p>
+    <a class="btn solid" href="mailto:your@email.com?subject=Project%20Inquiry%20%E2%80%94%20GLM%20Design%20%26%20Build">Request a quote</a>
+    <div class="cmeta">
+      <span>Email <b>your@email.com</b></span>
+      <span>Phone <b>(000) 000-0000</b></span>
+      <span>Area <b>Your service area</b></span>
+    </div>
+  </div>
+  <p class="note">Add your real email, phone, and service area here — the button is a mailto link, easy to update.</p>
+</section>
+
+<footer>
+  <p>GLM Design &amp; Build is the Design frequency of <a href="index.html">Ion Productions</a>.</p>
+  <p style="margin-top:8px">Sound, Design, Art and Images — created by Glenroy on earth, uploaded to the universe.</p>
+  <p class="note">Placeholder build — swap in real projects, photos, testimonials, and contact details anytime.</p>
+</footer>
+
+</div>
+
+<script>
+// hero wave (amber vibration)
+(function(){
+  var cv=document.getElementById('waveHero');if(!cv)return;var ctx=cv.getContext('2d');
+  function size(){cv.width=cv.offsetWidth*devicePixelRatio;cv.height=cv.offsetHeight*devicePixelRatio;ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);}
+  size();addEventListener('resize',size);
+  function draw(t){
+    var w=cv.offsetWidth,h=cv.offsetHeight;ctx.clearRect(0,0,w,h);
+    var lines=[{a:34,s:.012,o:0,c:'rgba(255,122,44,.55)'},{a:24,s:.018,o:1.6,c:'rgba(255,178,122,.4)'},{a:46,s:.008,o:3.1,c:'rgba(255,122,44,.22)'}];
+    lines.forEach(function(L){ctx.beginPath();for(var x=0;x<=w;x+=6){var y=h/2+Math.sin(x*L.s+t*1.4+L.o)*L.a*Math.sin(x/w*Math.PI);x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.strokeStyle=L.c;ctx.lineWidth=2;ctx.stroke();});
+    requestAnimationFrame(function(){draw(t+.016);});
+  }
+  draw(0);
+})();
+// before/after sliders
+document.querySelectorAll('.ba').forEach(function(ba){
+  var inp=ba.querySelector('input'),before=ba.querySelector('.before'),div=ba.querySelector('.divider');
+  function upd(){var v=inp.value;before.style.clipPath='inset(0 '+(100-v)+'% 0 0)';div.style.left=v+'%';}
+  inp.addEventListener('input',upd);upd();
+});
+</script>
+</body></html>

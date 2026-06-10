@@ -87,6 +87,10 @@ section{margin-top:74px}
 footer{margin-top:90px;padding-top:34px;border-top:1px solid rgba(255,122,44,.16);text-align:center;color:var(--muted);font-size:13px}
 footer a{color:var(--accent)}
 .note{font-size:11px;color:#6b5d4b;font-style:italic;margin-top:10px}
+/* GLM logo badge (kept black & white, as designed) */
+.hero .glm-badge{position:absolute;top:0;right:0;width:128px;background:#fff;border-radius:12px;padding:7px;box-shadow:0 6px 22px rgba(0,0,0,.45);z-index:4}
+.hero .glm-badge img{width:100%;display:block;border-radius:6px}
+@media(max-width:640px){.hero .glm-badge{width:84px;top:-4px;right:-2px}}
 </style></head>
 <body>
 <div class="cosmos"></div><div class="stars"></div>
@@ -107,6 +111,7 @@ footer a{color:var(--accent)}
 <!-- HERO -->
 <header class="hero">
   <canvas id="waveHero"></canvas>
+  <div class="glm-badge"><img src="assets/glm-logo.jpg" alt="GLM Design & Build LLC"></div>
   <div class="inner">
     <span class="freqtag">528 Hz · The Design Frequency</span>
     <h1>GLM Design &amp; Build</h1>

@@ -22,7 +22,7 @@ img{display:block}
 a{color:inherit;text-decoration:none}
 
 /* ---------- scroll driver ---------- */
-#scroller{position:relative;height:1900vh;z-index:1;pointer-events:none}
+#scroller{position:relative;height:1200vh;z-index:1;pointer-events:none}
 
 /* ---------- fixed 3D stage ---------- */
 .scene{position:fixed;inset:0;overflow:hidden;background:
@@ -398,7 +398,7 @@ body.touch{overflow-y:auto}
   }
   function step(){
     raf = null;
-    cam += (target - cam) * 0.12;
+    cam += (target - cam) * 0.16;
     if (Math.abs(target - cam) < 0.4) cam = target;
     movers.style.transform = "translateZ(" + cam + "px)";  // ONLY the side walls move
     for (var i=0;i<arts.length;i++){
@@ -411,6 +411,8 @@ body.touch{overflow-y:auto}
       op = Math.round(op * 100) / 100;
       if (a._op !== op){                              // only touch the DOM when it actually changes
         a.style.opacity = op;
+        var vis = op === 0 ? "hidden" : "visible";    // fully-faded frames stop being composited
+        if (a._vis !== vis){ a.style.visibility = vis; a._vis = vis; }
         var pe = op < 0.5 ? "none" : "auto";
         if (a._pe !== pe){ a.style.pointerEvents = pe; a._pe = pe; }
         a._op = op;
@@ -495,9 +497,10 @@ body.touch{overflow-y:auto}
   var waveCanvases = [];
   Array.prototype.forEach.call(document.querySelectorAll("canvas.waves"), function(cv){
     var len = parseInt(cv.dataset.len, 10) || 1500;
-    cv.width  = Math.round(len / 3);   // internal res (CSS stretches to full wall)
+    var iw  = Math.min(1300, Math.round(len / 3)); // cap internal res — huge canvases choke the GPU
+    cv.width  = iw;                    // CSS stretches to full wall
     cv.height = 234;                   // ~ room height / 3
-    waveCanvases.push({ cv:cv, ctx:cv.getContext("2d") });
+    waveCanvases.push({ cv:cv, ctx:cv.getContext("2d"), fx:(len/3)/iw });
   });
   var LINES = [
     {col:"rgba(200,115,255,0.85)", amp:0.10, freq:0.9, speed:1.7, off:0.0,  base:0.50, lw:2},
@@ -506,7 +509,7 @@ body.touch{overflow-y:auto}
     {col:"rgba(255,255,255,0.55)", amp:0.05, freq:1.9, speed:2.8, off:3.3,  base:0.34, lw:1}
   ];
   function drawWaves(o, t){
-    var ctx = o.ctx, W = o.cv.width, H = o.cv.height;
+    var ctx = o.ctx, W = o.cv.width, H = o.cv.height, FX = o.fx || 1;
     ctx.clearRect(0,0,W,H);
     for (var i=0;i<LINES.length;i++){
       var L = LINES[i];
@@ -516,8 +519,8 @@ body.touch{overflow-y:auto}
       var baseY = H * L.base, amp = H * L.amp;
       for (var x=0; x<=W; x+=6){
         // +t makes crests travel toward x=0 = the front edge (toward the viewer)
-        var y = baseY + amp * Math.sin(x*0.012*L.freq + t*L.speed + L.off)
-                      + amp*0.35 * Math.sin(x*0.03*L.freq - t*L.speed*0.6);
+        var y = baseY + amp * Math.sin(x*0.012*L.freq*FX + t*L.speed + L.off)
+                      + amp*0.35 * Math.sin(x*0.03*L.freq*FX - t*L.speed*0.6);
         if (x===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
       }
       ctx.stroke();

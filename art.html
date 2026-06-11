@@ -137,6 +137,33 @@ a{color:inherit;text-decoration:none}
 #vcap b{display:block;font-family:'Sora';font-weight:600;letter-spacing:.2em;text-transform:uppercase;font-size:15px;color:var(--violet-2);text-shadow:0 0 14px rgba(200,115,255,.6)}
 #vcap small{display:block;margin-top:6px;font-weight:300;letter-spacing:.24em;text-transform:uppercase;font-size:10px;color:rgba(239,230,255,.6)}
 #vcap em{display:block;margin-top:10px;font-style:normal;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:rgba(240,192,255,.45)}
+
+/* ---------- mobile 2D gallery (touch devices only) ---------- */
+#m2d{display:none}
+body.touch #m2d{display:block}
+body.touch .scene,body.touch #scroller,body.touch #fwd{display:none!important}
+body.touch{overflow-y:auto}
+.m2d-hero{position:relative;padding:92px 22px 30px;text-align:center;
+  background:linear-gradient(180deg,rgba(4,2,10,.5),rgba(4,2,10,.9)),#000 url("assets/galaxies/ceiling.jpg") center/cover}
+.m2d-kick{font-family:'Plus Jakarta Sans',sans-serif;font-weight:200;letter-spacing:.4em;text-transform:uppercase;font-size:12px;color:var(--violet-2)}
+.m2d-title{font-family:'Sora',sans-serif;font-weight:800;font-size:clamp(34px,11vw,60px);line-height:1;margin-top:8px;
+  background:linear-gradient(180deg,#fff,var(--violet-2) 55%,var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 18px rgba(200,115,255,.5))}
+.m2d-sub{margin-top:12px;font-weight:300;color:rgba(239,230,255,.82);font-size:13px;line-height:1.5}
+.m2d-grid{display:grid;grid-template-columns:1fr;gap:18px;padding:22px 16px 64px;background:#04020a}
+@media (min-width:560px){.m2d-grid{grid-template-columns:1fr 1fr}}
+.m2d-card{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.m2d-frame{padding:10px;background:#070310;border:1px solid rgba(200,115,255,.45);
+  box-shadow:0 0 16px rgba(200,115,255,.25);border-radius:4px}
+.m2d-frame img{width:100%;height:auto;display:block;border-radius:2px}
+.m2d-plate{margin-top:8px;text-align:center;font-family:'Plus Jakarta Sans',sans-serif;font-weight:300;
+  letter-spacing:.14em;text-transform:uppercase;font-size:11px;color:rgba(240,192,255,.7)}
+.lb{position:fixed;inset:0;z-index:60;background:rgba(2,1,8,.96);display:none;flex-direction:column;
+  align-items:center;justify-content:center;padding:24px}
+.lb.on{display:flex}
+.lb img{max-width:100%;max-height:78vh;border:1px solid rgba(200,115,255,.6);box-shadow:0 0 40px rgba(200,115,255,.4)}
+#lbcap{margin-top:14px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:300;letter-spacing:.18em;text-transform:uppercase;
+  font-size:12px;color:var(--violet-2);text-align:center}
 </style>
 </head>
 <body>
@@ -190,6 +217,17 @@ a{color:inherit;text-decoration:none}
 
 <div id="scroller"></div>
 
+<!-- lightweight 2D gallery for phones/tablets (shown only on touch devices) -->
+<div id="m2d">
+  <div class="m2d-hero">
+    <div class="m2d-kick">Ion Productions · Art</div>
+    <div class="m2d-title">Pencil Portraits</div>
+    <div class="m2d-sub">Portrait &amp; figure drawings by Glenroy — tap any piece to enlarge</div>
+  </div>
+  <div class="m2d-grid" id="m2dGrid"></div>
+</div>
+<div class="lb" id="lb"><img id="lbimg" alt=""><div id="lbcap"></div></div>
+
 <script>
 (function(){
   "use strict";
@@ -227,6 +265,28 @@ a{color:inherit;text-decoration:none}
     {f:"beautician",                 t:"The Beautician",         m:"Graphite on paper", side:"L"},
     {f:"hair-model-one",             t:"Hair Model",             m:"Graphite on paper", side:"R"}
   ];
+
+  // ---------- touch devices: build a lightweight 2D gallery and skip the 3D engine entirely ----------
+  if (TOUCH) {
+    document.body.classList.add("touch");
+    var grid = document.getElementById("m2dGrid");
+    var lb = document.getElementById("lb"), lbimg = document.getElementById("lbimg"), lbcap = document.getElementById("lbcap");
+    PIECES.forEach(function(p){
+      var card = document.createElement("div");
+      card.className = "m2d-card";
+      card.innerHTML =
+        '<div class="m2d-frame"><img src="assets/art/' + p.f + '.jpg" alt="' + p.t + '" loading="lazy"></div>' +
+        '<div class="m2d-plate">' + p.t + '</div>';
+      card.addEventListener("click", function(){
+        lbimg.src = "assets/art/" + p.f + ".jpg";
+        lbcap.textContent = p.t + " \u00b7 " + p.m;
+        lb.classList.add("on");
+      });
+      grid.appendChild(card);
+    });
+    lb.addEventListener("click", function(){ lb.classList.remove("on"); });
+    return;
+  }
 
   var wallL = document.getElementById("wallL");
   var wallR = document.getElementById("wallR");

@@ -13,7 +13,7 @@
   --violet:#c873ff; --violet-2:#f0c0ff; --violet-dim:rgba(200,115,255,.45);
   --txt:#efe6ff;
   /* room geometry (px) */
-  --room-w:1200px; --room-h:700px; --depth:3800px;
+  --room-w:1200px; --room-h:700px; --depth:11600px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:var(--void);color:var(--txt);font-family:'Space Grotesk',sans-serif;overflow-x:hidden}
@@ -22,7 +22,7 @@ img{display:block}
 a{color:inherit;text-decoration:none}
 
 /* ---------- scroll driver ---------- */
-#scroller{position:relative;height:640vh;z-index:1;pointer-events:none}
+#scroller{position:relative;height:1900vh;z-index:1;pointer-events:none}
 
 /* ---------- fixed 3D stage ---------- */
 .scene{position:fixed;inset:0;overflow:hidden;background:
@@ -149,21 +149,21 @@ body.touch{overflow-y:auto}
 .m2d-title{font-family:'Sora',sans-serif;font-weight:800;font-size:clamp(34px,11vw,60px);line-height:1;margin-top:8px;
   background:linear-gradient(180deg,#fff,var(--violet-2) 55%,var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent;
   filter:drop-shadow(0 0 18px rgba(200,115,255,.5))}
-.m2d-sub{margin-top:12px;font-weight:300;color:rgba(239,230,255,.82);font-size:13px;line-height:1.5}
+.m2d-sub{margin-top:12px;font-weight:400;color:#fff;font-size:17px;line-height:1.5;text-shadow:0 1px 2px #000,0 0 14px rgba(200,115,255,.45)}
 .m2d-grid{display:grid;grid-template-columns:1fr;gap:18px;padding:22px 16px 64px;background:#04020a}
 @media (min-width:560px){.m2d-grid{grid-template-columns:1fr 1fr}}
 .m2d-card{cursor:pointer;-webkit-tap-highlight-color:transparent}
 .m2d-frame{padding:10px;background:#070310;border:1px solid rgba(200,115,255,.45);
   box-shadow:0 0 16px rgba(200,115,255,.25);border-radius:4px}
 .m2d-frame img{width:100%;height:auto;display:block;border-radius:2px}
-.m2d-plate{margin-top:8px;text-align:center;font-family:'Plus Jakarta Sans',sans-serif;font-weight:300;
-  letter-spacing:.14em;text-transform:uppercase;font-size:11px;color:rgba(240,192,255,.7)}
+.m2d-plate{margin-top:9px;text-align:center;font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;font-size:15px;color:#fff;text-shadow:0 1px 2px #000,0 0 12px rgba(200,115,255,.5)}
 .lb{position:fixed;inset:0;z-index:60;background:rgba(2,1,8,.96);display:none;flex-direction:column;
   align-items:center;justify-content:center;padding:24px}
 .lb.on{display:flex}
 .lb img{max-width:100%;max-height:78vh;border:1px solid rgba(200,115,255,.6);box-shadow:0 0 40px rgba(200,115,255,.4)}
-#lbcap{margin-top:14px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:300;letter-spacing:.18em;text-transform:uppercase;
-  font-size:12px;color:var(--violet-2);text-align:center}
+#lbcap{margin-top:14px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;letter-spacing:.12em;text-transform:uppercase;
+  font-size:17px;color:#fff;text-align:center;text-shadow:0 1px 2px #000,0 0 14px rgba(200,115,255,.55)}
 </style>
 </head>
 <body>
@@ -192,8 +192,8 @@ body.touch{overflow-y:auto}
     </div>
     <div class="wall back" id="wallB"><canvas class="waves" data-len="1200"></canvas></div>
     <div class="movers" id="movers">
-      <div class="wall left"  id="wallL"><canvas class="waves" data-len="3800"></canvas></div>
-      <div class="wall right" id="wallR"><canvas class="waves" data-len="3800"></canvas></div>
+      <div class="wall left"  id="wallL"><canvas class="waves" data-len="11600"></canvas></div>
+      <div class="wall right" id="wallR"><canvas class="waves" data-len="11600"></canvas></div>
       <div class="skysign" id="sign">
         <div class="signpanel">
           <div class="kick">Ion Productions · Art</div>
@@ -263,7 +263,65 @@ body.touch{overflow-y:auto}
     {f:"gaye",                       t:"Gaye",                   m:"Graphite on paper", side:"L"},
     {f:"leather-cap",                t:"Leather Cap",            m:"Graphite on paper", side:"R"},
     {f:"beautician",                 t:"The Beautician",         m:"Graphite on paper", side:"L"},
-    {f:"hair-model-one",             t:"Hair Model",             m:"Graphite on paper", side:"R"}
+    {f:"hair-model-one",             t:"Hair Model",             m:"Graphite on paper", side:"R"},
+    {f:"the-artist",                 t:"The Artist",             m:"Graphite on paper", side:"L"},
+    {f:"ann-marie-in-frame",         t:"Ann Marie in Frame",     m:"Graphite on paper", side:"R"},
+    {f:"ann-marie-fishnet",          t:"Ann Marie - Fishnet",    m:"Graphite on paper", side:"L"},
+    {f:"ann-marie-with-black-mamba", t:"Ann Marie with Black Mamba", m:"Graphite on paper", side:"R"},
+    {f:"ann-marie-yellow-and-black", t:"Ann Marie in Yellow & Black", m:"Colored pencil", side:"L"},
+    {f:"baby-john",                  t:"Baby John",              m:"Graphite on paper", side:"R"},
+    {f:"bauld-and-beautifull",       t:"Bald & Beautiful",       m:"Graphite on paper", side:"L"},
+    {f:"black-leather-cap",          t:"Black Leather Cap",      m:"Graphite on paper", side:"R"},
+    {f:"bodybuilder",                t:"Bodybuilder",            m:"Graphite on paper", side:"L"},
+    {f:"brother-and-sister",         t:"Brother & Sister",       m:"Graphite on paper", side:"R"},
+    {f:"cindy",                      t:"Cindy",                  m:"Graphite on paper", side:"L"},
+    {f:"colleage",                   t:"Collage",                m:"Mixed media",       side:"R"},
+    {f:"couple-blue-background",     t:"Couple - Blue Background", m:"Colored pencil",  side:"L"},
+    {f:"couple-aqua-green-background", t:"Couple - Aqua Green Background", m:"Colored pencil", side:"R"},
+    {f:"couple-purple-background",   t:"Couple - Purple Background", m:"Colored pencil", side:"L"},
+    {f:"couple-red-orange-yellow-background", t:"Couple - Red, Orange & Yellow", m:"Colored pencil", side:"R"},
+    {f:"diane-mirrored",             t:"Diane Mirrored",         m:"Graphite on paper", side:"L"},
+    {f:"dianne-yellow-background",   t:"Dianne - Yellow Background", m:"Colored pencil", side:"R"},
+    {f:"dianne-nude",                t:"Dianne",                 m:"Figure study",      side:"L"},
+    {f:"duckson-familly",            t:"Duckson Family",         m:"Graphite on paper", side:"R"},
+    {f:"eddison-and-bernice-on-honeymoom", t:"Eddison & Bernice on Honeymoon", m:"Graphite on paper", side:"L"},
+    {f:"evon",                       t:"Evon",                   m:"Graphite on paper", side:"R"},
+    {f:"familly-pink-draped-background", t:"Family - Pink Draped Background", m:"Colored pencil", side:"L"},
+    {f:"gift-to-spinderella",        t:"Gift to Spinderella",    m:"Graphite on paper", side:"R"},
+    {f:"girl-in-tree",               t:"Girl in Tree",           m:"Graphite on paper", side:"L"},
+    {f:"gold-bikini",                t:"Gold Bikini",            m:"Colored pencil",    side:"R"},
+    {f:"grandmother-with-pink-dress", t:"Grandmother with Pink Dress", m:"Colored pencil", side:"L"},
+    {f:"hair-model-two",             t:"Hair Model Two",         m:"Graphite on paper", side:"R"},
+    {f:"hair-model-three",           t:"Hair Model Three",       m:"Graphite on paper", side:"L"},
+    {f:"hairstyle-black-and-white",  t:"Hairstyle in Black & White", m:"Graphite on paper", side:"R"},
+    {f:"latin-boy",                  t:"Latin Boy",              m:"Graphite on paper", side:"L"},
+    {f:"leapard-print-bathing-suit", t:"Leopard Print Bathing Suit", m:"Colored pencil", side:"R"},
+    {f:"levi-jacket",                t:"Levi Jacket",            m:"Graphite on paper", side:"L"},
+    {f:"man-aqua-background",        t:"Man - Aqua Background",  m:"Colored pencil",    side:"R"},
+    {f:"man-with-bass",              t:"Man with Bass",          m:"Graphite on paper", side:"L"},
+    {f:"man-with-sky-background",    t:"Man with Sky Background", m:"Colored pencil",   side:"R"},
+    {f:"man-mother-grandmother",     t:"Man, Mother, Grandmother", m:"Graphite on paper", side:"L"},
+    {f:"mother-and-baby",            t:"Mother & Baby",          m:"Graphite on paper", side:"R"},
+    {f:"my-sons-the-graduates",      t:"My Sons, the Graduates", m:"Graphite on paper", side:"L"},
+    {f:"nude-back-on-black",         t:"Nude Back on Black",     m:"On black paper",    side:"R"},
+    {f:"nude-in-water",              t:"Nude in Water",          m:"Figure study",      side:"L"},
+    {f:"nude-on-beach",              t:"Nude on Beach",          m:"Figure study",      side:"R"},
+    {f:"nude-on-black-paper",        t:"Nude on Black Paper",    m:"On black paper",    side:"L"},
+    {f:"peter-black-and-white",      t:"Peter in Black & White", m:"Graphite on paper", side:"R"},
+    {f:"red-sheer",                  t:"Red Sheer",              m:"Colored pencil",    side:"L"},
+    {f:"richard-and-son-christerpher", t:"Richard & Son Christopher", m:"Graphite on paper", side:"R"},
+    {f:"shane-and-chris",            t:"Shane & Chris",          m:"Graphite on paper", side:"L"},
+    {f:"southern-bell",              t:"Southern Belle",         m:"Graphite on paper", side:"R"},
+    {f:"tear-ceramic-tile",          t:"Tear",                   m:"Ceramic tile",      side:"L"},
+    {f:"thong",                      t:"Thong",                  m:"Figure study",      side:"R"},
+    {f:"times-of-our-lives",         t:"Times of Our Lives",     m:"Graphite on paper", side:"L"},
+    {f:"tinas-legs",                 t:"Tina's Legs",            m:"Graphite on paper", side:"R"},
+    {f:"tracy-by-the-pool",          t:"Tracy by the Pool",      m:"Graphite on paper", side:"L"},
+    {f:"tracys-hot-legs",            t:"Tracy's Hot Legs",       m:"Graphite on paper", side:"R"},
+    {f:"vahn-harper-and-wife",       t:"Vahn Harper & Wife",     m:"Graphite on paper", side:"L"},
+    {f:"waterfall",                  t:"Waterfall",              m:"Graphite on paper", side:"R"},
+    {f:"wedding-couple",             t:"Wedding Couple",         m:"Graphite on paper", side:"L"},
+    {f:"young-woman-on-brown-paper", t:"Young Woman on Brown Paper", m:"On brown paper", side:"R"}
   ];
 
   // ---------- touch devices: build a lightweight 2D gallery and skip the 3D engine entirely ----------
@@ -323,7 +381,7 @@ body.touch{overflow-y:auto}
   });
 
   // ---------- scroll → camera walk ----------
-  var CAM_MAX = 3300;          // px walked into the room
+  var CAM_MAX = 11000;         // px walked into the room
   var cam = 0, target = 0, raf = null;
   function maxScroll(){ return Math.max(1, document.getElementById("scroller").offsetHeight - window.innerHeight); }
   function onScroll(){

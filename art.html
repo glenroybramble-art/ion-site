@@ -74,6 +74,7 @@ a{color:inherit;text-decoration:none}
 .wall.back .bk-title{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;
   font-family:'Sora',sans-serif;font-weight:200;letter-spacing:.4em;font-size:34px;color:rgba(240,192,255,.30);text-transform:uppercase;z-index:2}
 .wall canvas.waves{position:absolute;inset:0;width:100%;height:100%;opacity:.5;pointer-events:none}
+@media (pointer:coarse){.wall canvas.waves{display:none}}
 
 /* drawings hung on the side walls */
 .art{position:absolute;cursor:pointer;transform:translateZ(12px);
@@ -159,13 +160,8 @@ a{color:inherit;text-decoration:none}
     <div class="wall right" id="wallR"><canvas class="waves" data-len="3800"></canvas></div>
     <div class="floor" id="floor"></div>
     <div class="ceiling" id="ceiling">
-      <div class="skyimg on" style="background-image:url('assets/galaxies/ceiling.jpg')"></div>
-      <div class="skyimg" style="background-image:url('assets/galaxies/ceiling2.jpg')"></div>
-      <div class="skyimg" style="background-image:url('assets/galaxies/ceiling3.jpg')"></div>
-      <div class="skyimg" style="background-image:url('assets/galaxies/ceiling4.jpg')"></div>
-      <div class="skyimg" style="background-image:url('assets/galaxies/ceiling5.jpg')"></div>
-      <div class="skyimg" style="background-image:url('assets/galaxies/ceiling6.jpg')"></div>
-      <div class="skyimg" style="background-image:url('assets/galaxies/ceiling7.jpg')"></div>
+      <div class="skyimg on"></div>
+      <div class="skyimg"></div>
       <div class="skyveil"></div>
     </div>
     <div class="wall back" id="wallB"><canvas class="waves" data-len="1200"></canvas></div>
@@ -194,6 +190,8 @@ a{color:inherit;text-decoration:none}
 <script>
 (function(){
   "use strict";
+  var PHONE = !!(window.matchMedia && window.matchMedia("(max-width: 600px)").matches);
+  var TOUCH = !!(("ontouchstart" in window) || (window.matchMedia && window.matchMedia("(pointer: coarse)").matches));
   // ---- collection: side wall (L/R) + title + medium. Depth/height/width are auto-placed. ----
   // To add more later: drop the file in assets/art/ and add a row here.
   var PIECES = [
@@ -292,13 +290,19 @@ a{color:inherit;text-decoration:none}
     floorEl.style.transform = anti + "translateZ(-1900px) translateY(350px) rotateX(90deg)";
     ceilEl.style.transform  = anti + "translateZ(-1900px) translateY(-350px) rotateX(-90deg)";
     for (var i=0;i<arts.length;i++){
-      var eff = parseFloat(arts[i].dataset.basez) + cam;   // world z relative to camera
+      var a = arts[i];
+      var eff = parseFloat(a.dataset.basez) + cam;   // world z relative to camera
       var op;
       if (eff < -BACKDIST)  op = Math.max(0, 1 - (-BACKDIST - eff)/EMERGE); // emerging from the far wall
       else if (eff > -120)  op = Math.max(0, 1 - (eff + 120)/240);         // passing the camera
       else                  op = 1;
-      arts[i].style.opacity = op;
-      arts[i].style.pointerEvents = op < 0.5 ? "none" : "auto";
+      op = Math.round(op * 100) / 100;
+      if (a._op !== op){                              // only touch the DOM when it actually changes
+        a.style.opacity = op;
+        var pe = op < 0.5 ? "none" : "auto";
+        if (a._pe !== pe){ a.style.pointerEvents = pe; a._pe = pe; }
+        a._op = op;
+      }
     }
     if (cam !== target) loop();
   }
@@ -407,13 +411,15 @@ a{color:inherit;text-decoration:none}
       ctx.stroke();
     }
   }
-  var wt = 0, last = performance.now();
-  (function waveLoop(now){
-    var dt = Math.min(0.05, (now - last)/1000); last = now;
-    wt += dt;
-    for (var i=0;i<waveCanvases.length;i++) drawWaves(waveCanvases[i], wt);
-    requestAnimationFrame(waveLoop);
-  })(last);
+  if (!TOUCH) {
+    var wt = 0, last = performance.now();
+    (function waveLoop(now){
+      var dt = Math.min(0.05, (now - last)/1000); last = now;
+      wt += dt;
+      for (var i=0;i<waveCanvases.length;i++) drawWaves(waveCanvases[i], wt);
+      requestAnimationFrame(waveLoop);
+    })(last);
+  }
 
   // ---------- forward-walk button (mobile) ----------
   var holding = false;
@@ -424,15 +430,27 @@ a{color:inherit;text-decoration:none}
     window.addEventListener("pointerup", function(){ holding = false; });
   }
 
-  // ---------- ceiling slideshow (cross-fade every 30s) ----------
+  // ---------- ceiling slideshow (lazy: at most 2 images loaded; single static image on phones) ----------
   (function(){
+    var urls = ["ceiling.jpg","ceiling2.jpg","ceiling3.jpg","ceiling4.jpg","ceiling5.jpg","ceiling6.jpg","ceiling7.jpg"]
+                 .map(function(f){ return "assets/galaxies/" + f; });
     var layers = document.querySelectorAll(".ceiling .skyimg");
-    if (layers.length < 2) return;
-    var idx = 0;
+    if (!layers.length) return;
+    var a = layers[0], b = layers[1] || null;
+    a.style.backgroundImage = "url('" + urls[0] + "')"; a.classList.add("on");
+    if (PHONE || !b) return;                 // phones: one static image, no rotation
+    var idx = 0, front = a;
     setInterval(function(){
-      layers[idx].classList.remove("on");
-      idx = (idx + 1) % layers.length;
-      layers[idx].classList.add("on");
+      var next = (idx + 1) % urls.length;
+      var back = (front === a) ? b : a;
+      var pre = new Image();
+      pre.onload = function(){
+        back.style.backgroundImage = "url('" + urls[next] + "')";
+        back.classList.add("on");
+        front.classList.remove("on");
+        front = back; idx = next;
+      };
+      pre.src = urls[next];
     }, 30000);
   })();
 

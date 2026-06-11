@@ -358,7 +358,7 @@ body.touch{overflow-y:auto}
   var sign  = document.getElementById("sign");
   var fwd   = document.getElementById("fwd");
   var arts  = [];
-  var BACKDIST = 2600, EMERGE = 520;   // back wall sits a fixed distance ahead; art fades in as it emerges
+  var WALL_LEN = 11600, BACKDIST = 2600, EMERGE = 520;   // back wall sits a fixed distance ahead; art fades in as it emerges
 
   // auto-placement along each wall: staggered heights + widths so nothing lines up flat
   var THEIGHTS = [110, 290, 165, 250, 130, 300, 205, 175];
@@ -372,7 +372,8 @@ body.touch{overflow-y:auto}
     var depth, hi;
     if (p.side === "L"){ depth = START_L + iL*SPACING; hi = iL; iL++; }
     else               { depth = START_R + iR*SPACING; hi = iR; iR++; }
-    el.style.left  = depth + "px";
+    // the right wall's local x-axis runs opposite to the left's — mirror so depth means the same on both
+    el.style.left  = (p.side === "L" ? depth : WALL_LEN - depth) + "px";
     el.style.top   = THEIGHTS[hi % THEIGHTS.length] + "px";
     el.style.width = WIDTHS[gi % WIDTHS.length] + "px";
     el.dataset.title  = p.t;

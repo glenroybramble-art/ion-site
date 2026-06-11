@@ -29,7 +29,8 @@ a{color:inherit;text-decoration:none}
    radial-gradient(120% 90% at 50% 18%,rgba(200,115,255,.10),transparent 55%),
    #000;
   perspective:1000px;perspective-origin:50% 50%;z-index:0}
-.world{position:absolute;left:50%;top:50%;transform-style:preserve-3d;transform:translateZ(0)}
+.room{position:absolute;left:50%;top:50%;transform-style:preserve-3d}
+.movers{position:absolute;left:0;top:0;transform-style:preserve-3d;transform:translateZ(0)}
 
 .wall{position:absolute;left:0;top:0;transform-style:preserve-3d;
   background:linear-gradient(180deg,rgba(200,115,255,.035),transparent 16%,transparent 84%,rgba(200,115,255,.035));
@@ -70,7 +71,7 @@ a{color:inherit;text-decoration:none}
 .wall.right{width:var(--depth);height:var(--room-h);
   transform:translate(-50%,-50%) translateZ(calc(var(--depth)/-2)) translateX(calc(var(--room-w)/2)) rotateY(-90deg)}
 .wall.back{width:var(--room-w);height:var(--room-h);
-  transform:translate(-50%,-50%) translateZ(calc(var(--depth)*-1))}
+  transform:translate(-50%,-50%) translateZ(-2600px)}
 .wall.back .bk-title{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;
   font-family:'Sora',sans-serif;font-weight:200;letter-spacing:.4em;font-size:34px;color:rgba(240,192,255,.30);text-transform:uppercase;z-index:2}
 .wall canvas.waves{position:absolute;inset:0;width:100%;height:100%;opacity:.5;pointer-events:none}
@@ -155,9 +156,7 @@ a{color:inherit;text-decoration:none}
 </div>
 
 <div class="scene" id="scene">
-  <div class="world" id="world">
-    <div class="wall left"  id="wallL"><canvas class="waves" data-len="3800"></canvas></div>
-    <div class="wall right" id="wallR"><canvas class="waves" data-len="3800"></canvas></div>
+  <div class="room" id="room">
     <div class="floor" id="floor"></div>
     <div class="ceiling" id="ceiling">
       <div class="skyimg on"></div>
@@ -165,11 +164,15 @@ a{color:inherit;text-decoration:none}
       <div class="skyveil"></div>
     </div>
     <div class="wall back" id="wallB"><canvas class="waves" data-len="1200"></canvas></div>
-    <div class="skysign" id="sign">
-      <div class="signpanel">
-        <div class="kick">Ion Productions · Art</div>
-        <div class="title">Pencil Portraits</div>
-        <div class="instruction">Scroll to walk in · tap a drawing to bring it close</div>
+    <div class="movers" id="movers">
+      <div class="wall left"  id="wallL"><canvas class="waves" data-len="3800"></canvas></div>
+      <div class="wall right" id="wallR"><canvas class="waves" data-len="3800"></canvas></div>
+      <div class="skysign" id="sign">
+        <div class="signpanel">
+          <div class="kick">Ion Productions · Art</div>
+          <div class="title">Pencil Portraits</div>
+          <div class="instruction">Scroll to walk in · tap a drawing to bring it close</div>
+        </div>
       </div>
     </div>
   </div>
@@ -227,10 +230,7 @@ a{color:inherit;text-decoration:none}
 
   var wallL = document.getElementById("wallL");
   var wallR = document.getElementById("wallR");
-  var world = document.getElementById("world");
-  var wallB = document.getElementById("wallB");
-  var floorEl = document.getElementById("floor");
-  var ceilEl  = document.getElementById("ceiling");
+  var movers = document.getElementById("movers");
   var sign  = document.getElementById("sign");
   var fwd   = document.getElementById("fwd");
   var arts  = [];
@@ -282,13 +282,7 @@ a{color:inherit;text-decoration:none}
     raf = null;
     cam += (target - cam) * 0.12;
     if (Math.abs(target - cam) < 0.4) cam = target;
-    world.style.transform = "translateZ(" + cam + "px)";
-    // keep the back wall a constant size/perspective — cancel the walk so only the side walls move
-    wallB.style.transform = "translate(-50%,-50%) translateZ(" + (-BACKDIST - cam) + "px)";
-    // floor + ceiling stay static (cancel the walk) so only the side walls scroll
-    var anti = "translateZ(" + (-cam) + "px) translate(-50%,-50%) ";
-    floorEl.style.transform = anti + "translateZ(-1900px) translateY(350px) rotateX(90deg)";
-    ceilEl.style.transform  = anti + "translateZ(-1900px) translateY(-350px) rotateX(-90deg)";
+    movers.style.transform = "translateZ(" + cam + "px)";  // ONLY the side walls move
     for (var i=0;i<arts.length;i++){
       var a = arts[i];
       var eff = parseFloat(a.dataset.basez) + cam;   // world z relative to camera

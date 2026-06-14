@@ -53,7 +53,8 @@ section{margin-top:74px}
 /* ── PLAYER ── */
 .player{margin-top:32px;display:grid;grid-template-columns:300px 1fr;gap:24px;border:1px solid rgba(159,216,230,.16);border-radius:20px;padding:24px;background:linear-gradient(150deg,rgba(12,20,38,.7),rgba(6,7,15,.6));backdrop-filter:blur(6px)}
 @media(max-width:760px){.player{grid-template-columns:1fr}}
-.np-art{aspect-ratio:1;border-radius:16px;background:radial-gradient(circle at 38% 32%,#1b3a66,#0a1322 70%);position:relative;overflow:hidden;border:1px solid rgba(58,166,255,.3);display:flex;align-items:center;justify-content:center}
+.np-art{aspect-ratio:1;border-radius:16px;background:radial-gradient(circle at 38% 32%,#0e2236,#05070e 72%);position:relative;overflow:hidden;border:1px solid rgba(58,166,255,.3);display:flex;align-items:center;justify-content:center}
+.np-art .np-wave{position:absolute;inset:0;width:100%;height:100%;display:block}
 .np-art .ringart{width:54%;height:54%;border-radius:50%;border:3px solid var(--electric);box-shadow:0 0 28px rgba(58,166,255,.7),inset 0 0 22px rgba(58,166,255,.4);position:relative;animation:spin 14s linear infinite}
 .np-art .ringart::after{content:"";position:absolute;inset:30%;border-radius:50%;background:var(--electric);box-shadow:0 0 20px var(--electric)}
 .np-art.playing .ringart{animation-duration:5s}
@@ -210,8 +211,7 @@ footer a{color:var(--electric)}
   <div class="player">
     <div>
       <div class="np-art" id="npArt">
-        <div class="ringart"></div>
-        <div class="eq"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        <canvas class="np-wave" id="npWave"></canvas>
       </div>
       <div class="np-meta">
         <div class="np-title" id="npTitle">Select a track</div>
@@ -474,6 +474,32 @@ footer a{color:var(--electric)}
   draw(0);
 })();
 
+// ── Now-playing wave (light blue / blue / white / black) ──
+(function(){
+  var c=document.getElementById('npWave'); if(!c) return;
+  var ctx=c.getContext('2d'), art=document.getElementById('npArt');
+  function size(){var r=c.getBoundingClientRect();c.width=Math.max(2,r.width*devicePixelRatio);c.height=Math.max(2,r.height*devicePixelRatio);ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);}
+  size(); addEventListener('resize',size);
+  var lines=[
+    {a:0.34,s:0.0090,o:2.4,c:'#3aa6ff',w:3.2},
+    {a:0.27,s:0.0130,o:1.3,c:'#9fd8e6',w:2.6},
+    {a:0.20,s:0.0180,o:0.0,c:'rgba(255,255,255,.92)',w:2.0},
+    {a:0.30,s:0.0110,o:3.5,c:'rgba(6,9,18,.95)',w:3.4}
+  ];
+  function draw(t){
+    var w=c.clientWidth,h=c.clientHeight; ctx.clearRect(0,0,w,h);
+    var playing=art&&art.classList.contains('playing'); var spd=playing?2.6:1.0;
+    lines.forEach(function(L){
+      ctx.beginPath();
+      for(var x=0;x<=w;x+=3){var env=Math.sin(x/w*Math.PI); var y=h/2+Math.sin(x*L.s+t*spd+L.o)*(h*L.a)*env; x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+      ctx.strokeStyle=L.c; ctx.lineWidth=L.w; ctx.shadowBlur=playing?12:5; ctx.shadowColor=L.c; ctx.stroke();
+    });
+    ctx.shadowBlur=0;
+    requestAnimationFrame(function(){draw(t+0.02);});
+  }
+  draw(0);
+})();
+
 // ── Music player ───────────────────────────────────────
 (function(){
   const audio=document.getElementById('audio');
@@ -538,4 +564,3 @@ document.querySelectorAll('.tab').forEach(tab=>tab.onclick=()=>{
 });
 </script>
 </body></html>
-     

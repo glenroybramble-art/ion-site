@@ -582,4 +582,7 @@ document.querySelectorAll('.scard[data-cat]').forEach(function(card){
   card.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}});
 });
 </script>
+<script>(function(){var p=new URLSearchParams(location.search);var cat=p.get("cat");if(!cat)return;function go(){var c=document.querySelector('.chip[data-cat="'+cat+'"]');if(c)c.click();}if(document.readyState!=="loading")go();else document.addEventListener("DOMContentLoaded",go);})();</script>
+<script src="search-index.js" defer></script>
+<script src="search.js" defer></script>
 </body></html>

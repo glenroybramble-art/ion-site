@@ -182,12 +182,14 @@ section{margin-top:60px}
 .engine.returning{animation:engineReturn .65s cubic-bezier(.2,0,.4,1) forwards!important}
 
 </style><style>
-.bgm-bar{position:absolute;top:62%;left:50%;transform:translateX(-50%);z-index:60;display:flex;align-items:center;gap:7px;background:rgba(4,4,10,.55);border:1px solid rgba(58,166,255,.38);border-radius:999px;padding:4px 10px 4px 5px;backdrop-filter:blur(6px);box-shadow:0 0 14px rgba(58,166,255,.28)}
-.bgm-btn{cursor:pointer;border:none;border-radius:999px;padding:5px 11px;font:600 11.5px 'Space Grotesk',system-ui,sans-serif;background:linear-gradient(135deg,#3aa6ff,#9f6bff);color:#fff;letter-spacing:.02em}
-.bgm-btn:hover{filter:brightness(1.1)}
-.bgm-song{color:#dbe9ff;font:500 11.5px 'Space Grotesk',system-ui,sans-serif;white-space:nowrap;max-width:42vw;overflow:hidden;text-overflow:ellipsis}
+.bgm-bar{position:absolute;top:50%;right:0;transform:translateY(-50%);z-index:60;display:flex;align-items:center;gap:8px;background:rgba(6,8,16,.72);border:1px solid rgba(159,216,230,.25);border-right:none;border-radius:999px 0 0 999px;padding:7px 14px 7px 13px;backdrop-filter:blur(7px);animation:bgmGlow 4.5s ease-in-out infinite}
+@keyframes bgmGlow{0%,100%{box-shadow:0 0 9px rgba(58,166,255,.5),0 0 18px rgba(200,115,255,.32),0 0 30px rgba(123,224,166,.24),0 0 40px rgba(255,122,44,.2)}50%{box-shadow:0 0 14px rgba(58,166,255,.72),0 0 28px rgba(200,115,255,.5),0 0 42px rgba(123,224,166,.36),0 0 56px rgba(255,122,44,.3)}}
+.bgm-btn{cursor:pointer;border:none;border-radius:999px;padding:5px 12px;font:600 11.5px 'Space Grotesk',system-ui,sans-serif;background:linear-gradient(135deg,#3aa6ff,#c873ff);color:#fff;letter-spacing:.02em}
+.bgm-btn:hover{filter:brightness(1.12)}
+.bgm-song{color:#dbe9ff;font:500 11.5px 'Space Grotesk',system-ui,sans-serif;white-space:nowrap;max-width:34vw;overflow:hidden;text-overflow:ellipsis}
 .bgm-song::before{content:"♫ ";color:#3aa6ff}
-@media(max-width:560px){.bgm-bar{top:60%;padding:3px 9px 3px 4px;gap:6px}.bgm-song{max-width:46vw;font-size:11px}.bgm-btn{padding:5px 9px;font-size:11px}}
+@media(prefers-reduced-motion:reduce){.bgm-bar{animation:none;box-shadow:0 0 12px rgba(58,166,255,.5),0 0 24px rgba(200,115,255,.35),0 0 34px rgba(123,224,166,.28)}}
+@media(max-width:560px){.bgm-bar{padding:6px 11px 6px 10px;gap:6px}.bgm-song{max-width:42vw;font-size:11px}.bgm-btn{padding:5px 10px;font-size:11px}}
 </style>
 </head>
 <body><div class="wrap">

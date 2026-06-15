@@ -474,13 +474,13 @@ function triggerFreq(card){
   var bgm=document.getElementById('bgm'),btn=document.getElementById('bgmToggle');
   if(!bgm||!btn)return;
   bgm.volume=0.35;
-  var muted=localStorage.getItem('ionMuted')==='1';
-  function icon(){var off=bgm.paused||muted;btn.textContent=off?'Play Song':'Pause Song';}
-  function start(){if(muted)return;var p=bgm.play();if(p)p.then(icon).catch(function(){});}
+  var paused=false;
+  function icon(){btn.textContent=bgm.paused?'Play Song':'Pause Song';}
+  function start(){if(paused)return;var p=bgm.play();if(p)p.catch(function(){});}
   start();
   function first(){start();['pointerdown','keydown','scroll'].forEach(function(ev){window.removeEventListener(ev,first);});}
   ['pointerdown','keydown','scroll'].forEach(function(ev){window.addEventListener(ev,first,{passive:true});});
-  btn.onclick=function(e){e.stopPropagation();if(bgm.paused){muted=false;localStorage.setItem('ionMuted','0');bgm.play();}else{muted=true;localStorage.setItem('ionMuted','1');bgm.pause();}icon();};
+  btn.onclick=function(e){e.stopPropagation();if(bgm.paused){paused=false;bgm.play();}else{paused=true;bgm.pause();}icon();};
   bgm.onplay=icon;bgm.onpause=icon;icon();
 })();
 </script>

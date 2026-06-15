@@ -176,9 +176,9 @@ section{margin-top:60px}
 .neb-bloom{position:absolute;inset:-28%;border-radius:50%;z-index:2;pointer-events:none;opacity:0;filter:blur(44px);transition:opacity .55s ease,background .55s ease;mix-blend-mode:screen}
 .neb-bloom.lit{opacity:.8}
 /* Engine launch / return */
-@keyframes engineLaunch{0%{transform:translate(-54%,-50%) scale(.98);opacity:1}40%{transform:translate(-51%,-50%) scale(1.32);opacity:1}100%{transform:translate(-50%,-50%) scale(.04);opacity:0}}
+@keyframes engineLaunch{0%{transform:translate(-54%,-50%) scale(.98);opacity:1}30%{transform:translate(-51%,-50%) scale(1.46);opacity:1}55%{transform:translate(-50.5%,-50%) scale(1.64);opacity:1}100%{transform:translate(-50%,-50%) scale(.04);opacity:0}}
 @keyframes engineReturn{0%{transform:translate(-54%,-50%) scale(.04);opacity:0}55%{transform:translate(-56%,-50%) scale(1.08);opacity:1}100%{transform:translate(-54%,-50%) scale(.98);opacity:1}}
-.engine.launching{animation:engineLaunch .85s cubic-bezier(.4,0,.2,1) forwards!important}
+.engine.launching{animation:engineLaunch 1.05s cubic-bezier(.4,0,.2,1) forwards!important}
 .engine.returning{animation:engineReturn .65s cubic-bezier(.2,0,.4,1) forwards!important}
 
 </style></head>
@@ -251,7 +251,7 @@ section{margin-top:60px}
 </div>
 
 <!-- Ambient site music -- drop your file at audio/ambient.mp3 (see audio/README) -->
-<audio id="bgm" loop preload="auto" src="audio/ambient.mp3"></audio>
+<audio id="bgm" loop preload="auto" src="https://pub-8a891eaf89f5498a97ca7685ac81715e.r2.dev/r2-upload/funk/g-s-and-soldiers-gb-mix2.mp3"></audio>
 <button id="bgmToggle" aria-label="Toggle music" title="Music on / off" style="position:fixed;right:18px;bottom:18px;z-index:100;width:46px;height:46px;border-radius:50%;border:1px solid rgba(58,166,255,.5);background:rgba(4,4,10,.72);color:#3aa6ff;cursor:pointer;backdrop-filter:blur(6px);box-shadow:0 0 18px rgba(58,166,255,.4);font-size:18px;line-height:1">&#9834;</button>
 
 <script>
@@ -454,7 +454,7 @@ function triggerFreq(card){
       engine.classList.remove('returning');
       bloom.classList.remove('lit');
     },750);
-  },860);
+  },1060);
 }
 
 // Ambient site music. Browsers block sound until a user gesture, so we try

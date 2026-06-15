@@ -522,12 +522,15 @@ footer a{color:var(--electric)}
 (function(){
   const audio=document.getElementById('audio');
   const tracks=[...document.querySelectorAll('.track')];
+  const tracklist=document.getElementById('tracklist');
+  const trackOrder=tracks.slice();
+  function applyOrder(arr){arr.forEach(t=>tracklist.appendChild(t));}
   const npTitle=document.getElementById('npTitle'),npArtist=document.getElementById('npArtist');
   const npArt=document.getElementById('npArt'),playBtn=document.getElementById('play');
   const seek=document.getElementById('seek'),curEl=document.getElementById('cur'),durEl=document.getElementById('dur');
   let idx=-1;
   const fmt=s=>isNaN(s)?'0:00':Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
-  function visible(){return tracks.filter(t=>t.style.display!=='none');}
+  function visible(){return [...tracklist.querySelectorAll('.track')].filter(t=>t.style.display!=='none');}
   function load(i,autoplay){
     const list=visible();if(!list.length)return;
     idx=((i%list.length)+list.length)%list.length;const t=list[idx];
@@ -551,12 +554,21 @@ footer a{color:var(--electric)}
   audio.onended=()=>load(idx+1,true);
   audio.ontimeupdate=()=>{if(audio.duration){seek.value=audio.currentTime/audio.duration*100;curEl.textContent=fmt(audio.currentTime);durEl.textContent=fmt(audio.duration);}};
   seek.oninput=()=>{if(audio.duration)audio.currentTime=seek.value/100*audio.duration;};
-  // filter chips
+  // filter chips — "All" lists every song A–Z; categories keep their order
   document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{
     document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));c.classList.add('active');
-    const cat=c.dataset.cat;let n=1;
-    tracks.forEach(t=>{const show=cat==='all'||t.dataset.cat===cat;t.style.display=show?'':'none';if(show)t.querySelector('.num').textContent=n++;});
+    const cat=c.dataset.cat;
+    applyOrder(cat==='all'
+      ? trackOrder.slice().sort((a,b)=>a.dataset.title.toLowerCase().localeCompare(b.dataset.title.toLowerCase()))
+      : trackOrder);
+    let n=1;
+    [...tracklist.querySelectorAll('.track')].forEach(t=>{
+      const show=cat==='all'||t.dataset.cat===cat;
+      t.style.display=show?'':'none';
+      if(show)t.querySelector('.num').textContent=n++;
+    });
   });
+  var allChip=document.querySelector('.chip[data-cat="all"]');if(allChip)allChip.click();
 })();
 
 // ── Video player ───────────────────────────────────────

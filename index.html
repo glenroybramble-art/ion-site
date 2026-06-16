@@ -189,7 +189,7 @@ section{margin-top:60px}
 .bgm-song{color:#dbe9ff;font:500 11.5px 'Space Grotesk',system-ui,sans-serif;white-space:nowrap;max-width:34vw;overflow:hidden;text-overflow:ellipsis}
 .bgm-song::before{content:"♫ ";color:#3aa6ff}
 @media(prefers-reduced-motion:reduce){.bgm-bar{animation:none;box-shadow:0 0 12px rgba(58,166,255,.5),0 0 24px rgba(200,115,255,.35),0 0 34px rgba(123,224,166,.28)}}
-@media(max-width:560px){.bgm-bar{padding:6px 11px 6px 10px;gap:6px}.bgm-song{max-width:42vw;font-size:11px}.bgm-btn{padding:5px 10px;font-size:11px}}
+@media(max-width:560px){.bgm-bar{flex-direction:column;align-items:flex-end;gap:5px;right:5px;padding:7px 10px;border:1px solid rgba(159,216,230,.25);border-radius:14px}.bgm-btn{padding:4px 10px;font-size:10.5px}.bgm-song{max-width:50vw;font-size:9.5px;text-align:right}}
 </style>
 </head>
 <body><div class="wrap">
@@ -478,8 +478,8 @@ function triggerFreq(card){
   function icon(){btn.textContent=bgm.paused?'Play Song':'Pause Song';}
   function start(){if(paused)return;var p=bgm.play();if(p)p.catch(function(){});}
   start();
-  function first(){start();['pointerdown','keydown','scroll'].forEach(function(ev){window.removeEventListener(ev,first);});}
-  ['pointerdown','keydown','scroll'].forEach(function(ev){window.addEventListener(ev,first,{passive:true});});
+  function first(){start();['pointerdown','touchstart','keydown','scroll'].forEach(function(ev){window.removeEventListener(ev,first);});}
+  ['pointerdown','touchstart','keydown','scroll'].forEach(function(ev){window.addEventListener(ev,first,{passive:true});});
   btn.onclick=function(e){e.stopPropagation();if(bgm.paused){paused=false;bgm.play();}else{paused=true;bgm.pause();}icon();};
   bgm.onplay=icon;bgm.onpause=icon;icon();
 })();

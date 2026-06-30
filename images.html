@@ -38,6 +38,7 @@ img{display:block}
 /* ---------- FIXED 3D STAGE ---------- */
 .scene{position:fixed;inset:0;overflow:hidden;background:#000;perspective:1000px;perspective-origin:50% 30%}
 .world{position:absolute;left:50%;top:calc(100vh - 200px);transform-style:preserve-3d;will-change:transform}
+@media(max-width:700px){.world{top:calc(100vh - 150px)}}
 
 /* ascending glowing steps */
 .step{position:absolute;left:0;top:0;width:var(--stairW,300px);height:0;margin-left:calc(var(--stairW,300px)/-2);
@@ -166,8 +167,14 @@ var ROWS=0, CLIMB_Z=0, CLIMB_Y=0;
 function layout(){
   var S = Math.min(1, window.innerWidth/980); if (S<0.34) S=0.34;   // shrink on phones
   var az=ROW_Z*S, ay=ROW_Y*S, aisle=AISLE*S, gap=SEAT_GAP*S;
+  var stairWpx = STAIR_W*S;
+  if (window.innerWidth < 700){            // mobile: pull the fan in + narrow the steps so it all fits
+    var halfW=window.innerWidth/2, margin=14, maxHalf=(SEATDIM.pano.w*S)/2;
+    var hc=Math.min(1, (halfW - margin - maxHalf)/(aisle + 3*gap*0.92)); if (hc<0.3) hc=0.3;
+    aisle*=hc; gap*=hc; stairWpx=aisle*1.7;
+  }
   world.innerHTML=""; seats.length=0;
-  world.style.setProperty("--stairW", (STAIR_W*S)+"px");
+  world.style.setProperty("--stairW", stairWpx+"px");
   var rand=rng(20260629), idx=0, i=0;
   while (idx < IMAGES.length){
     var y=-i*ay, z=-i*az;

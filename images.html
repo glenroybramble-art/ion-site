@@ -37,7 +37,7 @@ img{display:block}
 
 /* ---------- FIXED 3D STAGE ---------- */
 .scene{position:fixed;inset:0;overflow:hidden;background:#000;perspective:1000px;perspective-origin:50% 30%}
-.world{position:absolute;left:50%;top:86vh;transform-style:preserve-3d;will-change:transform}
+.world{position:absolute;left:50%;top:calc(100vh - 200px);transform-style:preserve-3d;will-change:transform}
 
 /* ascending glowing steps */
 .step{position:absolute;left:0;top:0;width:var(--stairW,300px);height:0;margin-left:calc(var(--stairW,300px)/-2);
@@ -66,16 +66,13 @@ img{display:block}
 .vign{position:fixed;inset:0;z-index:3;pointer-events:none;
   background:radial-gradient(120% 80% at 50% 60%,transparent 55%,rgba(0,0,0,.55) 100%)}
 
-/* title + hint */
-.title{position:fixed;left:0;right:0;top:13vh;z-index:5;text-align:center;pointer-events:none}
-.title .hz{font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--muted)}
-.title h1{font-family:'Sora';font-weight:800;font-size:clamp(30px,6vw,58px);letter-spacing:-.01em;
+/* title — its own space, pinned to the bottom */
+.title{position:fixed;left:0;right:0;bottom:0;z-index:6;text-align:center;pointer-events:none;padding:16px 20px 24px;
+  background:linear-gradient(to top,#000 0%,#000 40%,rgba(0,0,0,.85) 64%,transparent 100%)}
+.title h1{font-family:'Sora';font-weight:800;font-size:clamp(26px,5vw,46px);letter-spacing:.01em;line-height:1;
   background:linear-gradient(135deg,#eafff4,#7be0a6 70%);-webkit-background-clip:text;background-clip:text;color:transparent;
   filter:drop-shadow(0 0 24px rgba(var(--green-rgb),.55))}
-.title p{color:#bfe9d4;font-size:13px;margin-top:4px}
-.hint{position:fixed;left:0;right:0;bottom:18px;z-index:5;text-align:center;color:var(--muted);
-  font-size:11px;letter-spacing:.22em;text-transform:uppercase;pointer-events:none;animation:bob 2.4s ease-in-out infinite}
-@keyframes bob{0%,100%{opacity:.5;transform:translateY(0)}50%{opacity:1;transform:translateY(5px)}}
+.title p{color:#bfe9d4;font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;margin-top:6px}
 
 /* lightbox */
 .lb{position:fixed;inset:0;z-index:90;display:none;place-items:center;background:rgba(0,0,0,.9);backdrop-filter:blur(4px);padding:30px}
@@ -105,9 +102,8 @@ footer{position:relative;z-index:5}
 </div>
 
 <div class="title">
-  <div class="hz">741 Hz · Aurora Green</div>
-  <h1>The Gallery Climb</h1>
-  <p>Walk up the aisle — each photo is a seat in the stands.</p>
+  <h1>Images</h1>
+  <p>Walk up the aisle</p>
 </div>
 
 <div class="scene">
@@ -116,8 +112,6 @@ footer{position:relative;z-index:5}
   <div class="vign"></div>
   <div class="fog"></div>
 </div>
-
-<div class="hint">Scroll to climb ↑</div>
 
 <div id="scroller"></div>
 
@@ -239,3 +233,4 @@ document.addEventListener("keydown", function(e){ if(e.key==="Escape") closeLb()
 </script>
 </body>
 </html>
+                                                                                                                                                                                                                                                                                                                                           

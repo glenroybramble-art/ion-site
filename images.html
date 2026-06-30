@@ -149,78 +149,70 @@ var IMAGES = [
   {f:"p41.jpg", o:"land"}, {f:"p42.jpg", o:"land"}, {f:"p43.jpg", o:"pano"}
 ];
 
-/* ---- tunables (tweak to taste) ---- */
-var ROWS    = 14;     // how many terrace levels
-var ROW_Z   = 540;    // depth between rows (px)
-var ROW_Y   = 150;    // rise between rows (px)
-var AISLE   = 135;    // half-width of the central stair (px)
-var SEAT_GAP= 182;    // spacing between seats out from the aisle
-var STAIR_W = 300;    // width of the glowing step line
+/* ---- geometry (desktop base sizes; scaled down on small screens) ---- */
+var ROW_Z=520, ROW_Y=150, AISLE=135, SEAT_GAP=182, STAIR_W=300;
+var SEATDIM = { land:{w:172,h:116}, port:{w:120,h:160}, pano:{w:236,h:104} };
 
 /* ---- seeded RNG so the layout is stable between visits ---- */
 function rng(seed){ return function(){ seed|=0; seed=seed+0x6D2B79F5|0;
   var t=Math.imul(seed^seed>>>15,1|seed); t=t+Math.imul(t^t>>>7,61|t)^t;
   return ((t^t>>>14)>>>0)/4294967296; }; }
-var rand = rng(20260629);
 
 var world = document.getElementById("world");
 var seats = [];
+var ROWS=0, CLIMB_Z=0, CLIMB_Y=0;
 
-/* build the staircase + seats — one seat per photo, nearest-first; climb auto-extends */
-(function build(){
-  world.style.setProperty("--stairW", STAIR_W+"px");
-  var idx = 0, i = 0;
+/* build staircase + seats — one per photo; whole scene scales to viewport width */
+function layout(){
+  var S = Math.min(1, window.innerWidth/980); if (S<0.34) S=0.34;   // shrink on phones
+  var az=ROW_Z*S, ay=ROW_Y*S, aisle=AISLE*S, gap=SEAT_GAP*S;
+  world.innerHTML=""; seats.length=0;
+  world.style.setProperty("--stairW", (STAIR_W*S)+"px");
+  var rand=rng(20260629), idx=0, i=0;
   while (idx < IMAGES.length){
-    var y = -i*ROW_Y, z = -i*ROW_Z;
-    var st = document.createElement("div");
-    st.className = "step";
-    st.style.transform = "translate3d(0,"+y+"px,"+z+"px)";
-    world.appendChild(st);
-
-    var n = Math.min(1 + Math.floor(rand()*2.999), IMAGES.length - idx);
-    var taken = {};
+    var y=-i*ay, z=-i*az;
+    var st=document.createElement("div"); st.className="step";
+    st.style.transform="translate3d(0,"+y+"px,"+z+"px)"; world.appendChild(st);
+    var n=Math.min(1+Math.floor(rand()*2.999), IMAGES.length-idx), taken={};
     for (var k=0;k<n;k++){
       var tries=0, side, slot, key;
-      do { side = rand()<0.5?-1:1; slot = 1+Math.floor(rand()*3); key = side+":"+slot; tries++; }
+      do { side=rand()<0.5?-1:1; slot=1+Math.floor(rand()*3); key=side+":"+slot; tries++; }
       while (taken[key] && tries<8);
       if (taken[key]) continue;
       taken[key]=1;
-      var data = IMAGES[idx++];
-      var x = side*(AISLE + slot*SEAT_GAP*0.92);
-      var jitterY = (rand()-0.5)*40;
-      var seat = document.createElement("div");
-      seat.className = "seat " + (data.o || "land");
-      seat.style.transform = "translate3d("+x+"px,"+(y+jitterY)+"px,"+z+"px)";
-      var src = BASE + data.f;
-      var pic = document.createElement("img"); pic.src = src; pic.loading = "lazy"; pic.alt = "";
-      seat.appendChild(pic);
-      seat.dataset.full = src;
-      world.appendChild(seat);
-      seats.push(seat);
+      var data=IMAGES[idx++], dim=SEATDIM[data.o]||SEATDIM.land;
+      var x=side*(aisle + slot*gap*0.92), jitterY=(rand()-0.5)*40*S;
+      var seat=document.createElement("div"); seat.className="seat "+(data.o||"land");
+      seat.style.setProperty("--seatW", (dim.w*S)+"px");
+      seat.style.setProperty("--seatH", (dim.h*S)+"px");
+      seat.style.transform="translate3d("+x+"px,"+(y+jitterY)+"px,"+z+"px)";
+      var src=BASE+data.f;
+      var pic=document.createElement("img"); pic.src=src; pic.loading="lazy"; pic.alt="";
+      seat.appendChild(pic); seat.dataset.full=src;
+      world.appendChild(seat); seats.push(seat);
     }
     i++;
   }
-  ROWS = i;
-  document.getElementById("scroller").style.height = Math.max(600, i*46) + "vh";
-})();
+  ROWS=i; CLIMB_Z=(ROWS-1)*az; CLIMB_Y=(ROWS-1)*ay;
+  document.getElementById("scroller").style.height=Math.max(600, i*46)+"vh";
+}
 
 /* ---- scroll = climb ---- */
-var CLIMB_Z = (ROWS-1)*ROW_Z;
-var CLIMB_Y = (ROWS-1)*ROW_Y;
 var target=0, cur=0;
 function onScroll(){
-  var max = document.getElementById("scroller").offsetHeight - window.innerHeight;
+  var max=document.getElementById("scroller").offsetHeight - window.innerHeight;
   target = max>0 ? Math.min(1, Math.max(0, window.scrollY/max)) : 0;
 }
 function tick(){
-  cur += (target-cur)*0.12;                       // easing
-  var z = cur*CLIMB_Z, y = cur*CLIMB_Y;
-  world.style.transform = "translate(-50%,0) translate3d(0,"+y+"px,"+z+"px)";
+  cur += (target-cur)*0.12;
+  var z=cur*CLIMB_Z, y=cur*CLIMB_Y;
+  world.style.transform="translate(-50%,0) translate3d(0,"+y+"px,"+z+"px)";
   requestAnimationFrame(tick);
 }
+var rsT;
 window.addEventListener("scroll", onScroll, {passive:true});
-window.addEventListener("resize", onScroll);
-onScroll(); tick();
+window.addEventListener("resize", function(){ clearTimeout(rsT); rsT=setTimeout(function(){ layout(); onScroll(); }, 200); });
+layout(); onScroll(); tick();
 
 /* ---- lightbox ---- */
 var lb=document.getElementById("lb"), lbimg=document.getElementById("lbimg");

@@ -225,7 +225,20 @@ onScroll(); tick();
 /* ---- lightbox ---- */
 var lb=document.getElementById("lb"), lbimg=document.getElementById("lbimg");
 document.addEventListener("click", function(e){
+  if (e.target.closest(".nav") || e.target.closest(".lb")) return;
+  // fast path: direct hit
   var seat = e.target.closest(".seat");
+  // fallback: match the click against each seat's RENDERED box (reliable under 3D perspective)
+  if (!seat){
+    var x=e.clientX, y=e.clientY, bestArea=0;
+    for (var i=0;i<seats.length;i++){
+      var r=seats[i].getBoundingClientRect();
+      if (r.width && x>=r.left && x<=r.right && y>=r.top && y<=r.bottom){
+        var a=r.width*r.height;          // prefer the nearest (largest) seat when boxes overlap
+        if (a>bestArea){ bestArea=a; seat=seats[i]; }
+      }
+    }
+  }
   if (seat && seat.dataset.full){ lbimg.src = seat.dataset.full; lb.classList.add("on"); }
 });
 function closeLb(){ lb.classList.remove("on"); lbimg.src=""; }

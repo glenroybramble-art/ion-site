@@ -36,6 +36,11 @@ nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);background:rgba(
 .btn:hover{transform:translateY(-2px)}
 .btn.solid{background:linear-gradient(90deg,var(--accent),var(--accent-deep));color:#fff;box-shadow:0 0 24px rgba(255,122,44,.5)}
 .btn.ghost{border:1px solid rgba(255,200,150,.4);color:var(--ion-bright);background:rgba(255,122,44,.08)}
+.portfolio-cta{margin:54px auto 0;max-width:640px;text-align:center;padding:38px 26px;border-radius:20px;border:1px solid rgba(255,200,150,.22);background:rgba(255,122,44,.06)}
+.portfolio-cta h3{font-family:'Sora',sans-serif;font-weight:600;font-size:22px;margin:0 0 8px;color:#ffd9b0}
+.portfolio-cta p{margin:0 0 24px;font-size:15px;opacity:.82}
+.btn-big{padding:20px 44px;font-size:15px;letter-spacing:.14em}
+@media(max-width:600px){.portfolio-cta{padding:30px 18px}.btn-big{padding:18px 26px;font-size:13px;width:100%}}
 /* section */
 section{margin-top:74px}
 .eyebrow{font-family:'Sora';font-weight:600;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:12px}
@@ -194,6 +199,13 @@ footer a{color:var(--accent)}
     <figure class="gs"><img src="assets/projects/s13.jpg" alt="GLM Design &amp; Build project — Remodel" loading="lazy"><figcaption>Remodel</figcaption></figure>
   </div>
   <p class="note">Real project photos — drag each slider for before/after. Titles and descriptions are easy to rename.</p>
+
+  <!-- PORTFOLIO CTA -->
+  <div class="portfolio-cta">
+    <h3>Want to see more?</h3>
+    <p>The full photo archive — every job, start to finish.</p>
+    <a class="btn solid btn-big" href="https://drive.google.com/drive/folders/1CT8LnqPOiLpblFvTDIFTjfJzaRHl2__m" target="_blank" rel="noopener noreferrer">My Portfolio on Google Drive</a>
+  </div>
 </section>
 
 <!-- PROCESS -->
